@@ -6,845 +6,348 @@
 <title>BrainrotEasy</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#10101b;color:#fff;font-family:Arial,sans-serif}
-header{background:#20203a;padding:18px;text-align:center;border-bottom:2px solid #8b5cf6}
-header h1{margin:0;color:#c4b5fd;font-size:30px}
-header p{margin:7px 0 0;color:#bbb}
-#top{display:flex;justify-content:space-around;gap:8px;flex-wrap:wrap;padding:12px;background:#19192b}
-.stat{background:#292943;padding:10px 14px;border-radius:12px}
-nav{display:flex;flex-wrap:wrap;gap:7px;padding:12px;justify-content:center}
-button{background:#7c3aed;color:white;border:0;border-radius:10px;padding:11px 14px;font-weight:bold;cursor:pointer}
-button:hover{filter:brightness(1.15)}
-button:disabled{opacity:.45;cursor:not-allowed}
-input,select{background:#19192b;color:white;border:1px solid #555579;padding:11px;border-radius:9px;width:100%;margin:5px 0}
-main{max-width:1050px;margin:auto;padding:12px}
-.panel{background:#1c1c30;border:1px solid #393957;border-radius:15px;padding:16px;margin:10px 0}
-h2{color:#c4b5fd;margin-top:0}
-h3{margin-bottom:7px}
+body{margin:0;background:#10101c;color:white;font-family:Arial}
+header{text-align:center;padding:18px;background:#242442}
+h1{color:#c4b5fd}
+main{max-width:950px;margin:auto;padding:12px}
+.panel,.card{background:#22223b;border:1px solid #414166;border-radius:14px;padding:14px;margin:10px 0}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}
-.item{background:#292943;border-radius:12px;padding:13px;text-align:center;overflow-wrap:anywhere}
-.item .emoji{font-size:35px}
-.small{font-size:13px;color:#c4c4da}
-.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.row>*{flex:1;min-width:120px}
-.notice{padding:11px;border-radius:9px;background:#30254c;margin:8px 0}
-.good{color:#86efac}.bad{color:#fca5a5}
+button{background:#7c3aed;color:white;border:0;border-radius:9px;padding:11px;margin:4px;cursor:pointer}
+input,select{padding:11px;margin:4px;background:#151526;color:white;border:1px solid #555;border-radius:8px;max-width:100%}
+nav{display:flex;flex-wrap:wrap;justify-content:center}
 .hidden{display:none!important}
-.big{font-size:25px;font-weight:bold}
-footer{text-align:center;color:#888;padding:20px;font-size:12px}
-#auth{max-width:420px;margin:35px auto}
+.emoji{font-size:34px}
+.notice{background:#343452;padding:10px;border-radius:8px;margin:8px 0}
+.wheel{width:240px;height:240px;max-width:75vw;max-height:75vw;margin:20px auto;border-radius:50%;border:6px solid white;background:conic-gradient(#22c55e 0deg 250deg,#ef4444 250deg 360deg);position:relative}
+.pointer{position:absolute;top:0;left:calc(50% - 7px);border-left:7px solid transparent;border-right:7px solid transparent;border-top:35px solid white;transform-origin:7px 115px}
+.small{color:#bbb;font-size:13px}
 </style>
 </head>
 <body>
 <header>
 <h1>🧠 BrainrotEasy</h1>
-<p>Открывай кейсы, собирай брейнротов и зарабатывай монеты!</p>
+<p>Открывай кейсы, собирай брейнротов и побеждай!</p>
 </header>
 
-<div id="auth" class="panel">
+<main>
+<section id="auth" class="panel">
 <h2>Вход в игру</h2>
-<div id="authMessage" class="notice">Создай аккаунт или войди в существующий.</div>
-<input id="username" placeholder="Имя игрока (без пробелов)" maxlength="20">
-<input id="password" type="password" placeholder="Пароль">
-<div class="row">
+<input id="name" placeholder="Имя игрока" maxlength="20">
+<input id="pass" type="password" placeholder="Пароль">
+<br>
 <button onclick="register()">Регистрация</button>
 <button onclick="login()">Войти</button>
-</div>
-<p class="small">Демо: пароль хранится только локально в браузере. Не используй настоящий пароль.</p>
-</div>
+<div id="authmsg" class="notice">Создай аккаунт или войди.</div>
+<p class="small">Демо-игра. Данные сохраняются в этом браузере.</p>
+</section>
 
-<div id="game" class="hidden">
-<div id="top">
-<div class="stat">👤 <span id="playerName">Игрок</span></div>
-<div class="stat">🪙 <b id="coins">0</b></div>
-<div class="stat">⚡ Энергия: <b id="energy">30</b>/30</div>
-<div class="stat">🎁 Реф. кейсы: <b id="refCases">0</b></div>
+<section id="game" class="hidden">
+<div class="panel">
+👤 <b id="player"></b> |
+🪙 <b id="coins">0</b>
 </div>
-
 <nav>
-<button onclick="page('cases')">📦 Кейсы</button>
-<button onclick="page('collection')">🎒 Коллекция</button>
-<button onclick="page('clicker')">👆 Кликер</button>
-<button onclick="page('dice')">🎲 Кубики</button>
-<button onclick="page('codes')">🎟️ Коды</button>
-<button onclick="page('referrals')">👥 Рефералы</button>
-<button onclick="page('bonus')">🎁 Бонус</button>
-<button onclick="page('profile')">👤 Профиль</button>
+<button onclick="show('cases')">📦 Кейсы</button>
+<button onclick="show('inventory')">🎒 Коллекция</button>
+<button onclick="show('upgrade')">🎯 Апгрейдер</button>
+<button onclick="show('battles')">⚔️ Батлы</button>
+<button onclick="show('codes')">🎟️ Коды</button>
+<button onclick="show('bonus')">🎁 Бонус</button>
 <button onclick="logout()">Выйти</button>
 </nav>
 
-<main>
-<section id="casesPage" class="page panel">
-<h2>📦 Магазин кейсов</h2>
-<p class="small">Выбирай кейс и пробуй удачу!</p>
-<div id="caseGrid" class="grid"></div>
-<div id="caseResult" class="notice hidden"></div>
+<section id="cases" class="panel">
+<h2>📦 Кейсы</h2>
+<div id="casegrid" class="grid"></div>
+<div id="casemsg" class="notice"></div>
 </section>
 
-<section id="collectionPage" class="page panel hidden">
-<h2>🎒 Моя коллекция</h2>
-<p>Брейнротов: <b id="totalBrainrots">0</b></p>
-<div id="inventory" class="grid"></div>
+<section id="inventory" class="panel hidden">
+<h2>🎒 Коллекция</h2>
+<div id="items" class="grid"></div>
 </section>
 
-<section id="clickerPage" class="page panel hidden">
-<h2>👆 Кликер</h2>
-<div class="item">
-<div class="emoji" id="clickEmoji">🧠</div>
-<h3 id="clickName">Нубини Пиццанини</h3>
-<p>Уровень: <b id="clickLevel">1</b></p>
-<p>За нажатие: <b id="clickReward">1</b> монет</p>
-<button id="clickButton" onclick="clickBrainrot()" style="font-size:18px">КЛИК!</button>
-<button onclick="levelUp()">⬆️ Улучшить уровень</button>
-<p class="small">Максимум 30 энергии. Одна энергия восстанавливается каждую минуту.</p>
-</div>
+<section id="upgrade" class="panel hidden">
+<h2>🎯 Апгрейдер</h2>
+<p>🟢 Зелёная зона — улучшение. 🔴 Красная зона — потеря брейнрота. Шанс успеха 70%.</p>
+<select id="upgradeitem"></select>
+<div class="wheel"><div id="pointer" class="pointer"></div></div>
+<button onclick="upgrade()">Крутить стрелку</button>
+<div id="upmsg" class="notice">Выбери брейнрота.</div>
 </section>
 
-<section id="dicePage" class="page panel hidden">
-<h2>🎲 Кубики</h2>
-<p>Выбери брейнрота из коллекции и цвет. Угадай цвет на всех четырёх кубиках, чтобы получить награду!</p>
-<label>Брейнрот для ставки</label>
-<select id="diceBrainrot"></select>
-<label>Выбери цвет</label>
-<select id="diceColor">
-<option value="red">🔴 Красный</option>
-<option value="orange">🟠 Оранжевый</option>
-<option value="yellow">🟡 Жёлтый</option>
-<option value="green">🟢 Зелёный</option>
-<option value="blue">🔵 Синий</option>
-<option value="purple">🟣 Фиолетовый</option>
-</select>
-<button id="diceButton" onclick="rollDice()">Бросить кубики (ставка 1 брейнрот)</button>
-<div id="diceFaces" class="grid" style="margin-top:12px"></div>
-<div id="diceResult" class="notice hidden"></div>
-<p class="small">0 совпадений: потеря ставки. 1 совпадение: получаешь 2 копии. 2–3 совпадения: потеря ставки. 4 совпадения: получаешь 3 копии. 🌈 Радужный кубик: 10 копий.</p>
+<section id="battles" class="panel hidden">
+<h2>⚔️ Батлы</h2>
+<p>Создай батл, выбери кейс и ставку. Второй игрок должен войти под другим аккаунтом в этом же браузере.</p>
+<select id="battlecase"></select>
+<input id="stake" type="number" min="1" value="50" placeholder="Ставка каждого">
+<button onclick="createBattle()">Создать батл</button>
+<div id="bmsg" class="notice"></div>
+<h3>Открытые батлы</h3>
+<div id="battlelist" class="grid"></div>
 </section>
 
-<section id="codesPage" class="page panel hidden">
-<h2>🎟️ Коды на монеты</h2>
-<p>Введи код, чтобы получить награду. Каждый игрок может активировать один код только один раз.</p>
-<div class="row">
-<input id="redeemCode" placeholder="Введи код">
+<section id="codes" class="panel hidden">
+<h2>🎟️ Коды</h2>
+<input id="redeemcode" placeholder="Введи код">
 <button onclick="redeem()">Активировать</button>
-</div>
-<div id="codeMessage" class="notice">Коды действуют только в этой демоверсии и в этом браузере.</div>
+<div id="codemsg" class="notice"></div>
 <hr>
 <h3>Создать код</h3>
-<p class="small">Создавать коды могут только создатели игры: Saiik42 и lnoagent111. Стоимость создания равна награде кода и списывается с баланса.</p>
-<div class="row">
-<input id="newCode" placeholder="Название кода (например BRAIN100)" maxlength="30">
-<input id="codeCoins" type="number" placeholder="Монеты" min="1" value="100">
-<input id="codeUses" type="number" placeholder="Активации" min="1" value="5">
-</div>
+<input id="newcode" placeholder="Название кода">
+<input id="reward" type="number" min="1" value="100" placeholder="Награда">
 <button onclick="createCode()">Создать код</button>
-<div id="createMessage" class="notice"></div>
-<h3>Коды, созданные в этом браузере</h3>
-<div id="codeList"></div>
+<div id="createMsg" class="notice"></div>
+<div id="codelist" class="grid"></div>
 </section>
 
-<section id="referralsPage" class="page panel hidden">
-<h2>👥 Реферальная система</h2>
-<p>Приглашай друзей по своей ссылке. Когда новый аккаунт зарегистрируется по ней, ты получишь реферальный кейс.</p>
-<div class="notice">Твоя ссылка:</div>
-<input id="refLink" readonly>
-<button onclick="copyReferral()">📋 Скопировать ссылку</button>
-<p>Приглашено друзей: <b id="refCount">0</b></p>
-<p>Реферальных кейсов: <b id="refCaseCount">0</b></p>
-<h3>🎁 Реферальный кейс</h3>
-<p>Каждый засчитанный приглашённый друг приносит один кейс. Открывай его, чтобы получить брейнрота.</p>
-<button onclick="openReferralCase()">Открыть реферальный кейс</button>
-<div id="refResult" class="notice hidden"></div>
-<p class="small">В демоверсии рефералы учитываются только в данных этого браузера. Это не настоящая защита от повторных аккаунтов.</p>
-</section>
-
-<section id="bonusPage" class="page panel hidden">
+<section id="bonus" class="panel hidden">
 <h2>🎁 Ежедневный бонус</h2>
-<div class="item">
-<div class="emoji">💰</div>
-<div class="big">+100 монет</div>
-<p id="bonusStatus">Загружаем статус бонуса...</p>
-<button id="bonusButton" onclick="claimBonus()">Забрать 100 монет</button>
-</div>
+<button onclick="bonus()">Получить 100 монет</button>
+<div id="bonusmsg" class="notice"></div>
 </section>
-
-<section id="profilePage" class="page panel hidden">
-<h2>👤 Профиль</h2>
-<div id="profileInfo"></div>
-<h3>Права аккаунта</h3>
-<p class="small">Создавать и удалять коды могут только создатели игры: Saiik42 и lnoagent111.</p>
-<button onclick="sellAll()">💰 Продать всю коллекцию</button>
 </section>
 </main>
-</div>
-
-<footer>BrainrotEasy • Демо-версия • Данные хранятся в localStorage</footer>
 
 <script>
-"use strict";
+const $=id=>document.getElementById(id);
+const KEY="BrainrotEasy_simple_v1";
+let db;
+try{db=JSON.parse(localStorage.getItem(KEY))||{users:{},codes:{},battles:[]}}
+catch(e){db={users:{},codes:{},battles:[]}}
+db.users=db.users||{};
+db.codes=db.codes||{};
+db.battles=db.battles||[];
+let me=null,busy=false;
 
-const STORAGE_KEY = "BrainrotEasy_demo_v5";
-const $ = id => document.getElementById(id);
-
-const brainrots = [
-["Нубини Пиццанини","🍕"],["Скибиди Туалет","🚽"],["Меовл","🐱"],
-["Сигма Гёрл","😎"],["Тунг Тунг Сахур","🥁"],["Балерина Капучино","☕"],
-["Тралалеро Тралала","🦈"],["Бомбардиро Крокодило","🐊"],
-["Капучино Ассасино","🥷"],["Ла Кукарача","🪳"],["Триппи Троппи","🐟"],
-["Бобритто Бандито","🦫"],["Фрулли Фрулла","🍓"],["Бананини Чуппини","🍌"],
-["Пингвино Кокосино","🐧"],["Томатито","🍅"],["Крокодило Бомбардиро","🐊"],
-["Горилло Вотермен","🦍"],["Пандачини Бананини","🐼"],["Китти Спагетти","🐈"],
-["Мамут Рахал","🦣"],["Роботино","🤖"],["Дракони Фруктини","🐉"],
-["Пицца Кот","🐈"],["Крабини Крабини","🦀"],["Шаркини","🦈"],
-["Кенгуру Банангуру","🦘"],["Кивини Драгонини","🥝"],["Курино Бургеро","🍔"],
-["Секретини","👁️"],["Лазанья Легендария","🍝"],["Космо Кот","🌌"]
+const cases=[
+{name:"Обычный",cost:25,emoji:"📦",tier:0},
+{name:"Редкий",cost:60,emoji:"🟦",tier:1},
+{name:"Эпический",cost:150,emoji:"🟪",tier:2},
+{name:"Легендарный",cost:400,emoji:"🟨",tier:3},
+{name:"Мифический",cost:1000,emoji:"🔥",tier:4},
+{name:"Секретный",cost:2500,emoji:"👁️",tier:5},
+{name:"Космический",cost:6000,emoji:"🌌",tier:6},
+{name:"Алмазный",cost:15000,emoji:"💎",tier:7},
+{name:"Божественный",cost:40000,emoji:"✨",tier:8}
 ];
 
-const cases = [
-{name:"Обычный",price:25,emoji:"📦",rarity:0},
-{name:"Редкий",price:60,emoji:"🟦",rarity:1},
-{name:"Эпический",price:120,emoji:"🟪",rarity:2},
-{name:"Легендарный",price:250,emoji:"🟨",rarity:3},
-{name:"Мифический",price:500,emoji:"🔥",rarity:4},
-{name:"Секретный",price:1000,emoji:"👁️",rarity:5},
-{name:"Космический",price:1800,emoji:"🌌",rarity:6},
-{name:"Неоновый",price:2500,emoji:"💡",rarity:7},
-{name:"Алмазный",price:4000,emoji:"💎",rarity:8},
-{name:"Радужный",price:6500,emoji:"🌈",rarity:9},
-{name:"Золотой",price:8500,emoji:"🪙",rarity:10},
-{name:"Супер",price:12000,emoji:"⚡",rarity:11},
-{name:"Мега",price:18000,emoji:"🚀",rarity:12},
-{name:"Ультра",price:25000,emoji:"👑",rarity:13},
-{name:"Брейнрот",price:40000,emoji:"🧠",rarity:14}
+const brains=[
+["Нубини Пиццанини","🍕",10,0],
+["Скибиди Туалет","🚽",15,0],
+["Меовл","🐱",30,1],
+["Сигма Гёрл","😎",50,1],
+["Тунг Тунг Сахур","🥁",100,2],
+["Балерина Капучино","☕",200,2],
+["Тралалеро Тралала","🦈",400,3],
+["Ла Кукарача","🪳",700,3],
+["Бобритто Бандито","🦫",1500,4],
+["Мамут Рахал","🦣",3000,4],
+["Космо Кот","🌌",7000,5],
+["Секретини","👁️",15000,5],
+["Бананозавр","🦖",35000,6],
+["Король Капучино","👑",80000,6],
+["Алмазный Меовл","💎",200000,7],
+["Брейнрот Омега","🧠",600000,8],
+["Ультра Космо Кот","🚀",2000000,8]
 ];
 
-const mutations = [
-{name:"Обычный",mult:1},
-{name:"Золотой",mult:2},
-{name:"Алмазный",mult:3},
-{name:"Конфетный",mult:4},
-{name:"Неоновый",mult:5},
-{name:"Ледяной",mult:6},
-{name:"Радужный",mult:8},
-{name:"Космический",mult:10}
-];
-let db = loadDB();
-let currentUser = null;
-let energyTimer = null;
-let lastClickTime = 0;
-let diceBusy = false;
-
-function loadDB(){
-  try{
-    const raw=localStorage.getItem(STORAGE_KEY);
-    if(raw){
-      const parsed=JSON.parse(raw);
-      if(parsed&&parsed.accounts&&parsed.codes)return parsed;
-    }
-  }catch(e){}
-  return {accounts:{},codes:{}};
+function save(){
+ try{localStorage.setItem(KEY,JSON.stringify(db))}
+ catch(e){alert("Браузер не смог сохранить данные.")}
 }
-
-function saveDB(){
-  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(db));}
-  catch(e){alert("Не удалось сохранить данные. Возможно, память браузера заполнена.");}
-}
-
-function today(){
-  const d=new Date();
-  return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
-}
-
-function cleanName(s){return String(s||"").trim().replace(/\s+/g,"");}
-function account(){return currentUser?db.accounts[currentUser]:null;}
-
-const CODE_CREATORS=["saiik42","lnoagent111"];
-
-function isCodeCreator(){
-  return !!currentUser&&CODE_CREATORS.includes(String(currentUser).toLowerCase());
-}
-
-function say(id,msg,good=false){
-  const el=$(id);
-  if(!el)return;
-  el.textContent=msg;
-  el.className="notice "+(good?"good":"bad");
-}
-
+function msg(id,text){$(id).textContent=text}
+function admin(){return me&&me.toLowerCase()==="lnoagent111"}
 function register(){
-  const name=cleanName($("username").value);
-  const pass=$("password").value;
-
-  if(!/^[a-zA-Zа-яА-Я0-9_-]{3,20}$/.test(name)){
-    say("authMessage","Имя должно содержать 3–20 букв, цифр, _ или -.");
-    return;
-  }
-  if(pass.length<4){
-    say("authMessage","Пароль должен быть не короче 4 символов.");
-    return;
-  }
-  if(db.accounts[name]){
-    say("authMessage","Такой аккаунт уже существует.");
-    return;
-  }
-
-  const params=new URLSearchParams(location.search);
-  const inviter=params.get("ref");
-
-  db.accounts[name]={
-    password:pass,coins:100,inventory:{},energy:30,
-    lastEnergy:Date.now(),level:1,bonusDate:"",
-    role:"member",refCases:0,referrals:[],
-    referredBy:"",usedCodes:[],created:Date.now()
-  };
-
-  if(inviter&&inviter!==name&&db.accounts[inviter]){
-    const host=db.accounts[inviter];
-    if(!host.referrals.includes(name)){
-      host.referrals.push(name);
-      host.refCases=(host.refCases||0)+1;
-      db.accounts[name].referredBy=inviter;
-    }
-  }
-
-  saveDB();
-  currentUser=name;
-  enterGame();
+ let n=$("name").value.trim(),p=$("pass").value;
+ if(!/^[a-zA-Zа-яА-Я0-9_-]{3,20}$/.test(n))
+ return msg("authmsg","Имя должно содержать 3–20 букв, цифр, _ или -.");
+ if(p.length<4)return msg("authmsg","Пароль должен быть не короче 4 символов.");
+ if(db.users[n])return msg("authmsg","Такой аккаунт уже есть.");
+ db.users[n]={pass:p,coins:100,items:[],bonus:""};
+ save();me=n;enter();
 }
-
 function login(){
-  const name=cleanName($("username").value);
-  const pass=$("password").value;
-
-  if(!db.accounts[name]||db.accounts[name].password!==pass){
-    say("authMessage","Неверное имя или пароль.");
-    return;
-  }
-
-  currentUser=name;
-  enterGame();
+ let n=$("name").value.trim(),p=$("pass").value;
+ if(!db.users[n]||db.users[n].pass!==p)
+ return msg("authmsg","Неверное имя или пароль.");
+ me=n;enter();
 }
-
+function enter(){
+ $("auth").classList.add("hidden");
+ $("game").classList.remove("hidden");
+ renderCases();renderBattleCases();update();
+ show("cases");renderCodes();renderBattles();
+}
 function logout(){
-  currentUser=null;
-  if(energyTimer)clearInterval(energyTimer);
-  $("game").classList.add("hidden");
-  $("auth").classList.remove("hidden");
-  $("password").value="";
+ me=null;$("game").classList.add("hidden");$("auth").classList.remove("hidden");
 }
-
-function enterGame(){
-  $("auth").classList.add("hidden");
-  $("game").classList.remove("hidden");
-  recoverEnergy();
-  renderCases();
-  updateUI();
-  renderCodes();
-  page("cases");
-
-  if(energyTimer)clearInterval(energyTimer);
-
-  energyTimer=setInterval(()=>{
-    if(!account())return;
-    const a=account();
-    const before=a.energy;
-    recoverEnergy();
-    if(before!==a.energy){
-      saveDB();
-      updateUI();
-    }
-  },5000);
+function show(id){
+ ["cases","inventory","upgrade","battles","codes","bonus"].forEach(x=>$(x).classList.toggle("hidden",x!==id));
+ if(id==="upgrade")renderUpgrade();
+ if(id==="battles")renderBattles();
+ if(id==="codes")renderCodes();
 }
-
-function recoverEnergy(){
-  const a=account();
-  if(!a)return;
-  const now=Date.now();
-  const elapsed=Math.floor((now-(a.lastEnergy||now))/60000);
-
-  if(elapsed>0){
-    a.energy=Math.min(30,(a.energy||0)+elapsed);
-    a.lastEnergy=(a.lastEnergy||now)+elapsed*60000;
-    if(a.energy>=30)a.lastEnergy=now;
-  }
+function update(){
+ if(!me)return;
+ $("player").textContent=me;
+ $("coins").textContent=Math.floor(db.users[me].coins).toLocaleString("ru-RU");
+ renderInventory();renderUpgrade();
 }
-
-function updateUI(){
-  const a=account();
-  if(!a)return;
-
-  $("playerName").textContent=currentUser;
-  $("coins").textContent=Math.floor(a.coins);
-  $("energy").textContent=a.energy;
-  $("refCases").textContent=a.refCases||0;
-
-  $("totalBrainrots").textContent=
-    Object.values(a.inventory).reduce((s,n)=>s+n,0);
-
-  $("clickLevel").textContent=a.level;
-  $("clickReward").textContent=(a.level*0.1).toFixed(1);
-  $("clickButton").disabled=a.energy<=0;
-
-  $("bonusStatus").textContent=
-    a.bonusDate===today()
-    ?"Сегодня ты уже получил бонус. Возвращайся завтра!"
-    :"Бонус доступен — забирай свои 100 монет!";
-
-  $("bonusButton").disabled=a.bonusDate===today();
-  $("refCount").textContent=(a.referrals||[]).length;
-  $("refCaseCount").textContent=a.refCases||0;
-
-  $("refLink").value=
-    location.href.split("?")[0]+"?ref="+encodeURIComponent(currentUser);
-
-  $("profileInfo").innerHTML=
-    "<p>Имя: <b>"+escapeHTML(currentUser)+"</b></p>"+
-    "<p>Баланс: <b>"+Math.floor(a.coins)+" монет</b></p>"+
-    "<p>Уровень кликера: <b>"+a.level+"</b></p>"+
-    "<p>Брейнротов: <b>"+
-    Object.values(a.inventory).reduce((s,n)=>s+n,0)+"</b></p>"+
-    "<p>Роль: <b>"+(isCodeCreator()?"Создатель игры":"Участник")+"</b></p>";
-
-  renderInventory();
-  renderDiceOptions();
-}
-
-function page(name){
-  document.querySelectorAll(".page").forEach(el=>el.classList.add("hidden"));
-  const el=$(name+"Page");
-  if(el)el.classList.remove("hidden");
-}
-
+function brainValue(item){return item.value}
 function renderCases(){
-  $("caseGrid").innerHTML="";
-
-  cases.forEach(c=>{
-    const div=document.createElement("div");
-    div.className="item";
-    div.innerHTML='<div class="emoji">'+c.emoji+
-      '</div><h3>'+c.name+'</h3><p>🪙 '+c.price+'</p>';
-
-    const btn=document.createElement("button");
-    btn.textContent="Открыть";
-    btn.onclick=()=>openCase(c);
-
-    div.appendChild(btn);
-    $("caseGrid").appendChild(div);
-  });
+ $("casegrid").innerHTML="";
+ cases.forEach((c,i)=>{
+  let d=document.createElement("div");d.className="card";
+  d.innerHTML=`<div class="emoji">${c.emoji}</div><h3>${c.name}</h3><p>🪙 ${c.cost.toLocaleString("ru-RU")}</p>`;
+  let b=document.createElement("button");b.textContent="Открыть";
+  b.onclick=()=>openCase(i);d.appendChild(b);$("casegrid").appendChild(d);
+ });
 }
-
-function addBrainrot(name,count=1){
-  const a=account();
-  if(!a)return;
-  a.inventory[name]=(a.inventory[name]||0)+count;
+function openCase(i){
+ let c=cases[i],u=db.users[me];
+ if(u.coins<c.cost)return msg("casemsg","Не хватает монет!");
+ u.coins-=c.cost;
+ let pool=brains.filter(b=>b[3]<=c.tier);
+ let b=pool[Math.floor(Math.random()*pool.length)];
+ let item={name:b[0],emoji:b[1],value:b[2],level:0};
+ u.items.push(item);save();update();
+ msg("casemsg",`🎉 Выпал ${item.emoji} ${item.name}! Цена: ${item.value} монет.`);
 }
-
-function openCase(c){
-  const a=account();
-
-  if(a.coins<c.price){
-    $("caseResult").classList.remove("hidden");
-    say("caseResult","Не хватает монет!");
-    return;
-  }
-
-  a.coins-=c.price;
-
-  const maxIndex=Math.min(
-    brainrots.length-1,
-    Math.floor(Math.random()*(c.rarity+4))
-  );
-
-  const b=brainrots[maxIndex];
-  const mut=mutations[Math.floor(Math.random()*mutations.length)];
-  const fullName=b[0]+" ["+mut.name+"]";
-
-  addBrainrot(fullName);
-  $("caseResult").classList.remove("hidden");
-  $("caseResult").textContent=
-    "🎉 ТЕБЕ ВЫПАЛ: "+fullName+" "+b[1]+" • Множитель ×"+mut.mult;
-
-  saveDB();
-  updateUI();
-}
-
 function renderInventory(){
-  const a=account();
-  if(!a)return;
-
-  const box=$("inventory");
-  box.innerHTML="";
-
-  const entries=Object.entries(a.inventory).filter(([n,count])=>count>0);
-
-  if(!entries.length){
-    box.innerHTML="<p>Коллекция пуста. Открой свой первый кейс!</p>";
-    return;
-  }
-
-  entries.forEach(([name,count])=>{
-    const div=document.createElement("div");
-    div.className="item";
-    div.innerHTML='<div class="emoji">🧠</div><h3>'+
-      escapeHTML(name)+'</h3><p>Количество: '+count+'</p>';
-
-    const sell=document.createElement("button");
-    sell.textContent="Продать 1 за 10 монет";
-
-    sell.onclick=()=>{
-      if(a.inventory[name]>0){
-        a.inventory[name]--;
-        if(!a.inventory[name])delete a.inventory[name];
-        a.coins+=10;
-        saveDB();
-        updateUI();
-      }
-    };
-
-    div.appendChild(sell);
-    box.appendChild(div);
-  });
+ if(!me)return;
+ let box=$("items");box.innerHTML="";
+ let arr=db.users[me].items;
+ if(!arr.length){box.textContent="Коллекция пуста. Открой кейс!";return}
+ arr.forEach((it,i)=>{
+  let d=document.createElement("div");d.className="card";
+  d.innerHTML=`<div class="emoji">${it.emoji}</div><h3>${it.name}</h3><p>Цена: 🪙 ${it.value.toLocaleString("ru-RU")}</p>`;
+  let b=document.createElement("button");b.textContent="Продать";
+  b.onclick=()=>{db.users[me].coins+=it.value;arr.splice(i,1);save();update()};
+  d.appendChild(b);box.appendChild(d);
+ });
 }
-
-function clickBrainrot(){
-  const a=account();
-  if(!a||a.energy<=0)return;
-
-  const now=Date.now();
-  if(now-lastClickTime<80)return;
-  lastClickTime=now;
-
-  a.energy--;
-  a.lastEnergy=now;
-  a.coins+=a.level*0.1;
-
-  $("clickEmoji").textContent=
-    brainrots[Math.floor(Math.random()*brainrots.length)][1];
-
-  saveDB();
-  updateUI();
+function renderUpgrade(){
+ if(!me)return;
+ let s=$("upgradeitem");s.innerHTML="";
+ db.users[me].items.forEach((it,i)=>{
+  let o=document.createElement("option");o.value=i;
+  o.textContent=it.emoji+" "+it.name+" — "+it.value;s.appendChild(o);
+ });
 }
-
-function levelUp(){
-  const a=account(),cost=a.level*25;
-
-  if(a.coins<cost){
-    alert("Не хватает монет! Нужно "+cost+".");
-    return;
-  }
-
-  a.coins-=cost;
-  a.level++;
-  saveDB();
-  updateUI();
-}
-
-function claimBonus(){
-  const a=account();
-  if(!a)return;
-
-  if(a.bonusDate===today()){
-    say("bonusStatus","Ты уже забрал бонус сегодня.");
-    updateUI();
-    return;
-  }
-
-  a.coins+=100;
-  a.bonusDate=today();
-  saveDB();
-  updateUI();
-  say("bonusStatus","Успешно! Тебе начислено 100 монет. 🎉",true);
-}
-
-function makeCodeId(s){
-  return String(s||"").trim().toUpperCase().replace(/\s+/g,"");
-}
-
-function createCode(){
-  const a=account();
-  if(!a)return;
-
-  if(!isCodeCreator()){
-    say("createMessage","Создавать коды могут только создатели игры.");
-    return;
-  }
-
-  const code=makeCodeId($("newCode").value);
-  const coins=Number($("codeCoins").value);
-  const uses=Number($("codeUses").value);
-
-  if(!/^[A-ZА-Я0-9_-]{3,30}$/.test(code)){
-    say("createMessage","Код: 3–30 символов, только буквы, цифры, _ или -.");
-    return;
-  }
-  if(db.codes[code]){
-    say("createMessage","Такой код уже существует.");
-    return;
-  }
-  if(!Number.isSafeInteger(coins)||coins<1||
-     !Number.isSafeInteger(uses)||uses<1){
-    say("createMessage","Укажи положительное целое число монет и активаций.");
-    return;
-  }  if(a.coins<coins){
-    say("createMessage","Не хватает монет! Для кода на "+coins+" монет нужно иметь минимум столько же.");
-    return;
-  }
-
-  db.codes[code]={
-    coins:coins,
-    uses:uses,
-    maxUses:uses,
-    creator:currentUser,
-    activatedBy:[]
-  };
-
-  a.coins-=coins;
-  saveDB();
-  renderCodes();
-  updateUI();
-
-  say("createMessage","Код "+code+" создан! Списано "+coins+" монет. Награда: "+coins+" монет, активаций: "+uses+".",true);
-}
-
-function redeem(){
-  const a=account();
-  if(!a)return;
-
-  const code=makeCodeId($("redeemCode").value);
-  const c=db.codes[code];
-
-  if(!c){
-    say("codeMessage","Такого кода нет.");
-    return;
-  }
-
-  if(!a.usedCodes)a.usedCodes=[];
-  if(a.usedCodes.includes(code)){
-    say("codeMessage","Ты уже активировал этот код.");
-    return;
-  }
-
-  if(c.uses<=0){
-    say("codeMessage","У этого кода закончились активации.");
-    return;
-  }
-
-  if(!c.activatedBy)c.activatedBy=[];
-  if(c.activatedBy.includes(currentUser)){
-    say("codeMessage","Ты уже активировал этот код.");
-    return;
-  }
-
-  a.coins+=c.coins;
-  a.usedCodes.push(code);
-  c.uses--;
-  c.activatedBy.push(currentUser);
-
-  saveDB();
-  updateUI();
-  renderCodes();
-
-  say("codeMessage","Успешно! Получено "+c.coins+" монет. 🎉",true);
-}
-
-function deleteCode(code){
-  if(!isCodeCreator()){
-    alert("Удалять коды могут только создатели игры.");
-    return;
-  }
-
-  if(!db.codes[code])return;
-
-  if(!confirm("Удалить код "+code+"?"))return;
-
-  delete db.codes[code];
-  saveDB();
-  renderCodes();
-}
-
-function renderCodes(){
-  const box=$("codeList");
-  if(!box)return;
-
-  box.innerHTML="";
-  const entries=Object.entries(db.codes);
-
-  if(!entries.length){
-    box.textContent="Пока кодов нет.";
-    return;
-  }
-
-  entries.forEach(([code,c])=>{
-    const div=document.createElement("div");
-    div.className="item";
-    div.style.margin="8px 0";
-    div.innerHTML=
-      "<h3>"+escapeHTML(code)+"</h3>"+
-      "<p>🪙 Награда: "+c.coins+"</p>"+
-      "<p>Осталось активаций: "+c.uses+"</p>"+
-      "<p class='small'>Создатель: "+escapeHTML(c.creator||"неизвестен")+"</p>";
-
-    if(isCodeCreator()){
-      const btn=document.createElement("button");
-      btn.textContent="Удалить код";
-      btn.onclick=()=>deleteCode(code);
-      div.appendChild(btn);
-    }
-
-    box.appendChild(div);
-  });
-}
-
-function renderDiceOptions(){
-  const a=account();
-  if(!a)return;
-
-  const sel=$("diceBrainrot");
-  sel.innerHTML="";
-
-  Object.entries(a.inventory).filter(([name,count])=>count>0).forEach(([name,count])=>{
-    const option=document.createElement("option");
-    option.value=name;
-    option.textContent=name+" ×"+count;
-    sel.appendChild(option);
-  });
-
-  $("diceButton").disabled=sel.options.length===0;
-}
-
-function rollDice(){
-  const a=account();
-  if(!a||diceBusy)return;
-
-  const name=$("diceBrainrot").value;
-  if(!name||!a.inventory[name]||a.inventory[name]<1){
-    say("diceResult","Сначала получи брейнрота из кейса.");
-    return;
-  }
-
-  diceBusy=true;
-  $("diceButton").disabled=true;
-
-  a.inventory[name]--;
-  if(a.inventory[name]<=0)delete a.inventory[name];
-
-  const colors=[
-    {id:"red",emoji:"🔴"},
-    {id:"orange",emoji:"🟠"},
-    {id:"yellow",emoji:"🟡"},
-    {id:"green",emoji:"🟢"},
-    {id:"blue",emoji:"🔵"},
-    {id:"purple",emoji:"🟣"}
-  ];
-
-  const chosen=$("diceColor").value;
-  const faces=[];
-  let matches=0;
-
-  for(let i=0;i<4;i++){
-    const color=colors[Math.floor(Math.random()*colors.length)];
-    faces.push(color);
-    if(color.id===chosen)matches++;
-  }
-
-  $("diceFaces").innerHTML=faces.map(c=>
-    '<div class="item"><div class="emoji">'+c.emoji+"</div></div>"
-  ).join("");
-
-  let message="Не повезло! Ставка потеряна.";
-  if(matches===1){
-    addBrainrot(name,2);
-    message="Одно совпадение! Ты получил 2 копии брейнрота.";
-  }else if(matches===4){
-    addBrainrot(name,3);
-    message="Четыре совпадения! Ты получил 3 копии брейнрота! 🎉";
-  }
-
-  if(matches===0){
-    message="Нет совпадений. Ставка потеряна.";
-  }else if(matches===2||matches===3){
-    message=matches+" совпадения. Ставка потеряна.";
-  }
-
-  $("diceResult").classList.remove("hidden");
-  say("diceResult",message,matches===1||matches===4);
-
-  saveDB();
-  updateUI();
-
-  diceBusy=false;
-  $("diceButton").disabled=Object.values(a.inventory).every(n=>n<=0);
-}
-
-function openReferralCase(){
-  const a=account();
-  if(!a)return;
-
-  if((a.refCases||0)<1){
-    say("refResult","У тебя пока нет реферальных кейсов.");
-    return;
-  }
-
-  a.refCases--;
-  const b=brainrots[Math.floor(Math.random()*brainrots.length)];
-  const mut=mutations[Math.floor(Math.random()*mutations.length)];
-  const fullName=b[0]+" ["+mut.name+"]";
-
-  addBrainrot(fullName);
-
-  $("refResult").classList.remove("hidden");
-  say("refResult","🎉 Выпал "+fullName+" "+b[1]+"!",true);
-
-  saveDB();
-  updateUI();
-}
-
-function copyReferral(){
-  const text=$("refLink").value;
-
-  if(navigator.clipboard&&navigator.clipboard.writeText){
-    navigator.clipboard.writeText(text).then(()=>{
-      alert("Ссылка скопирована!");
-    }).catch(()=>{
-      prompt("Скопируй ссылку:",text);
-    });
+function upgrade(){
+ if(busy)return;
+ let u=db.users[me],i=Number($("upgradeitem").value),it=u.items[i];
+ if(!it)return msg("upmsg","Сначала получи брейнрота.");
+ busy=true;
+ let win=Math.random()<.7;
+ $("pointer").style.transition="transform 2.5s ease-out";
+ $("pointer").style.transform=`rotate(${1440+(win?Math.random()*220:270+Math.random()*80)}deg)`;
+ setTimeout(()=>{
+  if(!u.items[i]){busy=false;return}
+  if(win){
+   let old=it.value;
+   it.value=Math.round(old*2);
+   it.name=it.name+" +";
+   msg("upmsg",`🟢 Успех! Новый брейнрот стоит ${it.value} монет.`);
   }else{
-    prompt("Скопируй ссылку:",text);
+   u.items.splice(i,1);
+   msg("upmsg","🔴 Красная зона! Брейнрот пропал.");
   }
+  save();update();busy=false;
+ },2600);
 }
-
-function sellAll(){
-  const a=account();
-  if(!a)return;
-
-  const total=Object.values(a.inventory).reduce((s,n)=>s+n,0);
-  if(total===0){
-    alert("У тебя нет брейнротов для продажи.");
-    return;
-  }
-
-  if(!confirm("Продать всю коллекцию за "+(total*10)+" монет?"))return;
-
-  a.coins+=total*10;
-  a.inventory={};
-
-  saveDB();
-  updateUI();
-  alert("Коллекция продана!");
+function renderBattleCases(){
+ $("battlecase").innerHTML="";
+ cases.forEach((c,i)=>{
+  let o=document.createElement("option");o.value=i;
+  o.textContent=c.name+" — "+c.cost+" монет";$("battlecase").appendChild(o);
+ });
 }
-
-function escapeHTML(value){
-  return String(value).replace(/[&<>"']/g,ch=>({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#39;"
-  }[ch]));
+function createBattle(){
+ let u=db.users[me],ci=Number($("battlecase").value),stake=Number($("stake").value);
+ if(!Number.isSafeInteger(stake)||stake<1)return msg("bmsg","Укажи ставку больше нуля.");
+ if(u.coins<stake)return msg("bmsg","У тебя недостаточно монет для ставки.");
+ if(db.battles.some(b=>b.host===me))return msg("bmsg","У тебя уже есть открытый батл.");
+ u.coins-=stake;
+ db.battles.push({id:Date.now()+Math.random(),host:me,ci,stake});
+ save();update();renderBattles();
+ msg("bmsg","Батл создан! Ставка списана до завершения.");
 }
-
-window.addEventListener("DOMContentLoaded",()=>{
-  renderCases();
-});
+function renderBattles(){
+ if(!me)return;
+ let box=$("battlelist");box.innerHTML="";
+ let open=db.battles.filter(b=>b.host!==me);
+ if(!open.length)box.textContent="Нет открытых батлов других игроков.";
+ open.forEach(b=>{
+  let c=cases[b.ci],d=document.createElement("div");d.className="card";
+  d.innerHTML=`<h3>Игрок: ${b.host}</h3><p>${c.emoji} ${c.name}</p><p>Ставка: 🪙 ${b.stake}</p>`;
+  let btn=document.createElement("button");btn.textContent="Войти в батл";
+  btn.onclick=()=>joinBattle(b.id);d.appendChild(btn);box.appendChild(d);
+ });
+}
+function joinBattle(id){
+ let i=db.battles.findIndex(b=>b.id===id),b=db.battles[i];
+ if(!b)return msg("bmsg","Батл уже закрыт.");
+ let u=db.users[me];
+ if(u.coins<b.stake)return msg("bmsg","Не хватает монет для такой же ставки.");
+ u.coins-=b.stake;
+ let c=cases[b.ci],pool=brains.filter(x=>x[3]<=c.tier);
+ let x=pool[Math.floor(Math.random()*pool.length)];
+ let y=pool[Math.floor(Math.random()*pool.length)];
+ let host=db.users[b.host];
+ if(x[2]>y[2]){
+  host.coins+=b.stake*2;
+  host.items.push({name:x[0],emoji:x[1],value:x[2],level:0});
+  u.items.push({name:y[0],emoji:y[1],value:y[2],level:0});
+  msg("bmsg",`🏆 Победил ${b.host}! ${x[0]} стоит ${x[2]}, а ${y[0]} стоит ${y[2]}.`);
+ }else if(y[2]>x[2]){
+  u.coins+=b.stake*2;
+  host.items.push({name:x[0],emoji:x[1],value:x[2],level:0});
+  u.items.push({name:y[0],emoji:y[1],value:y[2],level:0});
+  msg("bmsg",`🏆 Ты победил! ${y[0]} стоит ${y[2]}, а ${x[0]} стоит ${x[2]}.`);
+ }else{
+  host.coins+=b.stake;u.coins+=b.stake;
+  msg("bmsg","Ничья! Ставки возвращены.");
+ }
+ db.battles.splice(i,1);save();update();renderBattles();
+}
+function createCode(){
+ let code=$("newcode").value.trim().toUpperCase().replace(/\s/g,"");
+ let reward=Number($("reward").value),u=db.users[me];
+ if(!/^[A-ZА-Я0-9_-]{3,30}$/.test(code))return msg("createMsg","Код должен быть длиной 3–30 символов.");
+ if(db.codes[code])return msg("createMsg","Такой код уже существует.");
+ if(!Number.isSafeInteger(reward)||reward<1)return msg("createMsg","Награда должна быть целым числом больше нуля.");
+ if(!admin()&&u.coins<reward)return msg("createMsg","Не хватает монет для создания кода.");
+ if(!admin())u.coins-=reward;
+ db.codes[code]={reward,uses:5,used:[],creator:me};
+ save();update();renderCodes();
+ msg("createMsg",admin()?"Код создан бесплатно! 👑":"Код создан, списано "+reward+" монет.");
+}
+function redeem(){
+ let code=$("redeemcode").value.trim().toUpperCase().replace(/\s/g,"");
+ let c=db.codes[code],u=db.users[me];
+ if(!c)return msg("codemsg","Код не найден.");
+ if(c.uses<=0)return msg("codemsg","Активации закончились.");
+ if(c.used.includes(me))return msg("codemsg","Ты уже использовал этот код.");
+ u.coins+=c.reward;c.uses--;c.used.push(me);
+ save();update();renderCodes();msg("codemsg","Получено "+c.reward+" монет!");
+}
+function renderCodes(){
+ if(!me)return;
+ let box=$("codelist");box.innerHTML="";
+ Object.entries(db.codes).forEach(([code,c])=>{
+  let d=document.createElement("div");d.className="card";
+  d.innerHTML=`<h3>${code}</h3><p>Награда: ${c.reward}</p><p>Осталось активаций: ${c.uses}</p>`;
+  box.appendChild(d);
+ });
+ if(!box.children.length)box.textContent="Пока кодов нет.";
+}
+function bonus(){
+ let u=db.users[me],day=new Date().toDateString();
+ if(u.bonus===day)return msg("bonusmsg","Бонус уже получен сегодня.");
+ u.bonus=day;u.coins+=100;save();update();msg("bonusmsg","+100 монет!");
+}
 </script>
 </body>
-</html>
+  </html>
