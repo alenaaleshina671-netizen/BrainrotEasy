@@ -9,10 +9,12 @@
 :root{--bg:#0d0d18;--panel:#19192b;--card:#252541;--border:#44446a;--purple:#8b5cf6;--text:#fff}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font:15px Arial,sans-serif}
-header{text-align:center;padding:20px;background:linear-gradient(135deg,#251044,#111827);border-bottom:2px solid var(--purple)}
-h1{margin:0;color:#d8b4fe;font-size:32px}h2{color:#c4b5fd}
+header{padding:20px;text-align:center;background:linear-gradient(135deg,#251044,#111827);border-bottom:2px solid var(--purple)}
+h1{margin:0;color:#d8b4fe;font-size:32px}
+h2{color:#c4b5fd}
 button{padding:11px 14px;background:var(--purple);color:white;border:0;border-radius:10px;font-weight:bold;cursor:pointer;margin:3px}
-button:hover{filter:brightness(1.2)}button:disabled{opacity:.45}
+button:hover{filter:brightness(1.2)}
+button:disabled{opacity:.45;cursor:not-allowed}
 input,select{padding:11px;border-radius:9px;border:1px solid var(--border);background:#10101e;color:white;max-width:100%}
 input{width:100%;margin:5px 0}
 nav{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;padding:10px;background:#141424;position:sticky;top:0;z-index:5}
@@ -20,10 +22,10 @@ nav button{font-size:12px;padding:10px}
 main{max-width:1100px;margin:auto;padding:12px}
 .panel{background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:15px;margin:12px 0}
 .hidden{display:none!important}
-.stats{display:flex;flex-wrap:wrap;gap:9px;padding:10px}
+.stats,.row{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
 .stat{background:#24243b;border-radius:10px;padding:10px;flex:1;min-width:100px;text-align:center}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:12px;text-align:center;overflow-wrap:anywhere}
+.card{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:12px;text-align:center;min-width:0;overflow-wrap:anywhere}
 .card img{width:86px;height:86px;object-fit:contain}
 .card h3{font-size:15px;min-height:32px}
 .small{font-size:12px;color:#b8b8d0}
@@ -31,14 +33,17 @@ main{max-width:1100px;margin:auto;padding:12px}
 #auth{max-width:430px;margin:25px auto}
 #caseOpening{max-width:460px;margin:20px auto;text-align:center;background:#282344;border:2px solid #a78bfa;border-radius:18px;padding:22px}
 #caseOpening img{width:120px;height:120px;object-fit:contain}
-.spinning img{animation:spin .45s linear infinite}
+#caseOpening.spinning img{animation:spin .45s linear infinite,pulse .45s ease-in-out infinite alternate}
 @keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{to{scale:1.12}}
 .wheel{width:220px;height:220px;border:5px solid white;border-radius:50%;margin:20px auto;position:relative;background:conic-gradient(#22c55e 0deg 252deg,#ef4444 252deg 360deg)}
 .pointer{position:absolute;top:-3px;left:calc(50% - 6px);width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:30px solid white;transform-origin:7px 113px}
+#diceFaces{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;font-size:38px}
+footer{text-align:center;color:#888;padding:25px}
 .road-track{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:15px 0}
 .road-step{padding:12px;border-radius:9px;background:#33334f;min-width:42px}
-.road-step.done{background:#166534}.road-step.current{outline:2px solid #c4b5fd}
-footer{text-align:center;color:#888;padding:25px}
+.road-step.done{background:#166534}
+.road-step.current{outline:2px solid #c4b5fd}
 </style>
 </head>
 <body>
@@ -54,16 +59,17 @@ footer{text-align:center;color:#888;padding:25px}
 <button onclick="register()">Регистрация</button>
 <button onclick="login()">Войти</button>
 <div id="authMsg" class="notice">Создай аккаунт или войди.</div>
-<p class="small">Демо-аккаунты хранятся в этом браузере. Не используй настоящий пароль.</p>
+<p class="small">Аккаунты хранятся только в этом браузере. Не используй настоящий пароль.</p>
 </section>
 
 <div id="game" class="hidden">
-<div class="stats">
+<div class="stats" style="padding:10px">
 <div class="stat">👤 <b id="statName">Игрок</b></div>
 <div class="stat">🪙 <b id="coins">0</b></div>
 <div class="stat">🧠 <b id="count">0</b></div>
 <div class="stat">⚡ <b id="energy">30</b>/30</div>
 </div>
+
 <nav>
 <button onclick="page('cases')">📦 Кейсы</button>
 <button onclick="page('collection')">🎒 Коллекция</button>
@@ -78,10 +84,11 @@ footer{text-align:center;color:#888;padding:25px}
 <button onclick="page('profile')">👤 Профиль</button>
 <button onclick="logout()">Выйти</button>
 </nav>
+
 <main>
 <section id="casesPage" class="panel">
 <h2>📦 Магазин кейсов</h2>
-<p class="small">У каждого кейса свой список персонажей и вероятности.</p>
+<p class="small">Открытие анимировано. Цены и стоимость персонажей увеличены.</p>
 <div id="caseGrid" class="grid"></div>
 <div id="caseOpening" class="hidden">
 <img id="openingImg" alt="Брейнрот">
@@ -112,16 +119,17 @@ footer{text-align:center;color:#888;padding:25px}
 </section>
 
 <section id="dicePage" class="panel hidden">
-<h2>🎲 Кубики</h2>
-<p>Если сумма двух кубиков 8 или больше, персонаж улучшится. Иначе он теряется.</p>
+<h2>🎲 Кубики со ставкой брейнротом</h2>
+<p>Выбери персонажа из коллекции. При победе он улучшится по стоимости, при проигрыше ставка теряется.</p>
 <select id="diceItem"></select>
 <button onclick="rollDice()">Бросить кубики</button>
-<div id="diceFaces"></div><div id="diceMsg" class="notice"></div>
+<div id="diceFaces"></div>
+<div id="diceMsg" class="notice"></div>
 </section>
 
 <section id="upgradePage" class="panel hidden">
 <h2>🎯 Апгрейдер</h2>
-<p>Шанс улучшения — 70%. При неудаче персонаж сохранится.</p>
+<p>Успех: 70%. Неудача: персонаж останется прежним.</p>
 <select id="upgradeItem"></select>
 <div class="wheel"><div id="pointer" class="pointer"></div></div>
 <button onclick="upgrade()">Крутить стрелку</button>
@@ -130,6 +138,7 @@ footer{text-align:center;color:#888;padding:25px}
 
 <section id="roadPage" class="panel hidden">
 <h2>🛣️ Дорога брейнротов</h2>
+<p>Выбери персонажа, проходи шаги и забирай награду. На каждом шаге есть риск потерять ставку.</p>
 <select id="roadItem"></select>
 <div class="card">
 <h3 id="roadStatus">Выбери брейнрота</h3>
@@ -145,7 +154,7 @@ footer{text-align:center;color:#888;padding:25px}
 
 <section id="battlesPage" class="panel hidden">
 <h2>⚔️ Батлы</h2>
-<p>Демо-батлы доступны только в данных этого браузера, это не онлайн-мультиплеер.</p>
+<p>Батлы доступны только в этом браузере.</p>
 <select id="battleCase"></select>
 <button onclick="createBattle()">Создать батл</button>
 <div id="battleMsg" class="notice"></div>
@@ -159,10 +168,10 @@ footer{text-align:center;color:#888;padding:25px}
 <div id="codeMsg" class="notice"></div>
 <hr>
 <h3>Создание промокода</h3>
-<p class="small">В демо-версии создавать коды может аккаунт lnoagent111. Это не серверная защита.</p>
+<p class="small">Создавать и удалять коды может только аккаунт lnoagent111. Это ограничение действует внутри демо-игры.</p>
 <input id="newCode" placeholder="Название кода">
-<input id="codeReward" type="number" value="100" min="1">
-<input id="codeUses" type="number" value="5" min="1">
+<input id="codeReward" type="number" value="100" min="1" placeholder="Награда">
+<input id="codeUses" type="number" value="5" min="1" placeholder="Число активаций">
 <button onclick="createCode()">Создать</button>
 <div id="codeCreateMsg" class="notice"></div>
 <div id="codeList" class="grid"></div>
@@ -170,7 +179,8 @@ footer{text-align:center;color:#888;padding:25px}
 
 <section id="referralsPage" class="panel hidden">
 <h2>👥 Рефералы</h2>
-<p>Твоя ссылка:</p><input id="refLink" readonly>
+<p>Твоя ссылка:</p>
+<input id="refLink" readonly>
 <button onclick="copyReferral()">Скопировать ссылку</button>
 <p>Приглашено друзей: <b id="refCount">0</b></p>
 <p>Реферальных кейсов: <b id="refCases">0</b></p>
@@ -186,17 +196,21 @@ footer{text-align:center;color:#888;padding:25px}
 <h2>📢 Telegram-бонусы</h2>
 <div class="grid">
 <div class="card">
-<h3>Подписка на канал</h3><p>Награда: 500 монет</p>
+<img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f4e3.png" alt="Канал">
+<h3>Подписка на канал</h3>
+<p>Награда: 500 монет</p>
 <button onclick="window.open('https://t.me/BrainEasyChannel','_blank')">Открыть канал</button>
 <button onclick="telegramBonus('channel')">Заявить о подписке</button>
 </div>
 <div class="card">
-<h3>Бонус Telegram</h3><p>Награда: 670 монет</p>
+<img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/1f916.png" alt="Бот">
+<h3>Бонус Telegram</h3>
+<p>Награда: 670 монет</p>
 <button onclick="window.open('https://t.me/BrainrotEasyy_bot','_blank')">Открыть бота</button>
 <button onclick="telegramBonus('bot')">Получить бонус</button>
 </div>
 </div>
-<div id="telegramMsg" class="notice">Подписка автоматически не проверяется.</div>
+<div id="telegramMsg" class="notice">Демо-версия не проверяет подписку автоматически.</div>
 </section>
 
 <section id="profilePage" class="panel hidden">
@@ -212,512 +226,229 @@ footer{text-align:center;color:#888;padding:25px}
 <script>
 "use strict";
 const $=id=>document.getElementById(id);
-const STORAGE_KEY="BrainrotEasy_demo_v6";
-const SESSION_KEY="BrainrotEasy_loggedUser";
+const STORAGE_KEY="BrainrotEasy_demo_v5",NEW_KEY="BrainrotEasy_simple_v1";
 let db={accounts:{},codes:{},battles:[]};
 let currentUser=null,openingTimer=null,pendingDrop=null,upgradeBusy=false,road=null;
-
 const emojiUrl=e=>"https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/72x72/"+Array.from(e)[0].codePointAt(0).toString(16)+".png";
-
 const brainrots=[
-{name:"Нубини Пиццанини",emoji:"🍕",value:100,rarity:"Обычный"},
-{name:"Триппи Троппи",emoji:"🐟",value:1000,rarity:"Обычный"},
-{name:"Бобритто Бандито",emoji:"🦫",value:8000,rarity:"Обычный"},
-{name:"Пицца Кот",emoji:"🐈",value:10000,rarity:"Редкий"},
-{name:"Сигма Гёрл",emoji:"😎",value:15000,rarity:"Редкий"},
-{name:"Фрулли Фрулла",emoji:"🍓",value:15000,rarity:"Редкий"},
-{name:"Тунг Тунг Сахур",emoji:"🥁",value:25000,rarity:"Редкий"},
-{name:"Бананини Чуппини",emoji:"🍌",value:30000,rarity:"Редкий"},
-{name:"Крабини Крабини",emoji:"🦀",value:30000,rarity:"Редкий"},
-{name:"Пингвино Кокосино",emoji:"🐧",value:50000,rarity:"Эпический"},
-{name:"Томатито",emoji:"🍅",value:90000,rarity:"Эпический"},
-{name:"Балерина Капучино",emoji:"☕",value:60000,rarity:"Эпический"},
-{name:"Шаркини",emoji:"🦈",value:70000,rarity:"Эпический"},
-{name:"Горилло Вотермен",emoji:"🦍",value:160000,rarity:"Легендарный"},
-{name:"Тралалеро Тралала",emoji:"🦈",value:120000,rarity:"Легендарный"},
-{name:"Бомбардиро Крокодило",emoji:"🐊",value:200000,rarity:"Легендарный"},
-{name:"Пандачини Бананини",emoji:"🐼",value:220000,rarity:"Легендарный"},
-{name:"Кенгуру Банангуру",emoji:"🦘",value:180000,rarity:"Легендарный"},
-{name:"Капучино Ассасино",emoji:"🥷",value:350000,rarity:"Мифический"},
-{name:"Китти Спагетти",emoji:"🐈",value:400000,rarity:"Мифический"},
-{name:"Крокодило Фрутти",emoji:"🐊",value:500000,rarity:"Мифический"},
-{name:"Мамут Рахал",emoji:"🦣",value:650000,rarity:"Секретный"},
-{name:"Ла Кукарача",emoji:"🪳",value:800000,rarity:"Секретный"},
-{name:"Роботино",emoji:"🤖",value:1200000,rarity:"Секретный"},
-{name:"Секретино",emoji:"👾",value:2000000,rarity:"Секретный"},
-{name:"Дракони Фруктини",emoji:"🐉",value:2500000,rarity:"Секретный"},
-{name:"Меовл",emoji:"🐱",value:9000000,rarity:"OG"},
-{name:"Скибиди Туалет",emoji:"🚽",value:5000000,rarity:"OG"},
-{name:"Мега Сигма",emoji:"🗿",value:4000000,rarity:"OG"},
-{name:"Радужный Брейнрот",emoji:"🌈",value:7500000,rarity:"OG"},
-{name:"Золотой Брейнрот",emoji:"🥇",value:10000000,rarity:"OG"},
-{name:"Космический Брейнрот",emoji:"👽",value:20000000,rarity:"OG"},
-{name:"Скибиди Омега",emoji:"🚽",value:30000000,rarity:"OG"},
-{name:"Золотой Тралалеро",emoji:"🦈",value:50000000,rarity:"OG"},
-{name:"Космический Нубини",emoji:"👽",value:75000000,rarity:"OG"},
-{name:"Босс Брейнротов",emoji:"👑",value:100000000,rarity:"OG"},
-{name:"Мега Дракони",emoji:"🐲",value:150000000,rarity:"OG"},
-{name:"Фантомино",emoji:"👻",value:180000000,rarity:"OG"},
-{name:"Огненный Тралалеро",emoji:"🔥",value:250000000,rarity:"OG"},
-{name:"Галактический Босс",emoji:"🌌",value:500000000,rarity:"OG"},
-{name:"Король Вселенной",emoji:"👑",value:1000000000,rarity:"OG"}
+{name:"Нубини Пиццанини",rarity:"Комонка",chance:1,value:10,emoji:"🍕"},
+{name:"Скибиди Туалет",rarity:"ОГ",chance:1000000,value:1000000,emoji:"🚽"},
+{name:"Меовл",rarity:"ОГ",chance:3000000,value:3000000,emoji:"🐱"},
+{name:"Сигма Гёрл",rarity:"Легендарный",chance:1000,value:10000,emoji:"😎"},
+{name:"Ла Кука Рача",rarity:"Секрет",chance:67000,value:67000,emoji:"🪳"},
+{name:"Тунг Тунг Сахур",rarity:"Редкий",chance:100,value:500,emoji:"🪵"},
+{name:"Бомбардиро Крокодило",rarity:"Эпический",chance:500,value:2500,emoji:"🐊"},
+{name:"Тралалеро Тралала",rarity:"Легендарный",chance:2000,value:15000,emoji:"🦈"}
 ];
-
 const cases=[
-{name:"Деревянный кейс",emoji:"📦",price:100,pool:[0,1,2,3],weights:[65,22,10,3]},
-{name:"Базовый кейс",emoji:"🎁",price:250,pool:[0,1,2,3,4,5],weights:[45,25,15,8,5,2]},
-{name:"Животный кейс",emoji:"🐾",price:500,pool:[1,2,3,8,9,12],weights:[35,25,18,10,8,4]},
-{name:"Серебряный кейс",emoji:"🥈",price:1000,pool:[3,4,5,6,7,9],weights:[30,25,18,12,10,5]},
-{name:"Золотой кейс",emoji:"🥇",price:2500,pool:[4,6,7,9,10,11,12],weights:[25,22,18,12,10,8,5]},
-{name:"Эпический кейс",emoji:"💎",price:5000,pool:[9,10,11,12,13,14,15],weights:[24,20,17,13,10,9,7]},
-{name:"Легендарный кейс",emoji:"🌟",price:9000,pool:[13,14,15,16,17,18],weights:[25,22,18,14,12,9]},
-{name:"Мифический кейс",emoji:"🔮",price:15000,pool:[14,15,16,17,18,19,20],weights:[24,20,16,13,11,9,7]},
-{name:"Секретный кейс",emoji:"🕵️",price:25000,pool:[18,19,20,21,22,23,24],weights:[25,20,16,13,10,9,7]},
-{name:"Космический кейс",emoji:"🚀",price:40000,pool:[21,22,23,24,25,26],weights:[25,22,18,14,12,9]},
-{name:"Радужный кейс",emoji:"🌈",price:60000,pool:[22,23,24,25,26,27,28],weights:[24,20,16,13,11,9,7]},
-{name:"ОГ-кейс",emoji:"👑",price:90000,pool:[26,27,28,29,30],weights:[40,25,17,11,7]},
-{name:"Мега-кейс",emoji:"⚡",price:140000,pool:[27,28,29,30,31,32],weights:[30,24,18,13,9,6]},
-{name:"Титан-кейс",emoji:"🛡️",price:200000,pool:[28,29,30,31,32,33],weights:[28,23,18,13,10,8]},
-{name:"Ультра-кейс",emoji:"💠",price:300000,pool:[29,30,31,32,33,34],weights:[28,23,18,13,10,8]},
-{name:"Абсолютный кейс",emoji:"🌌",price:500000,pool:[30,31,32,33,34,35,36],weights:[30,23,17,12,8,6,4]},
-{name:"Огненный кейс",emoji:"🔥",price:750000,pool:[32,33,34,35,36,37,38],weights:[28,22,17,12,9,7,5]},
-{name:"Фантом-кейс",emoji:"👻",price:1000000,pool:[33,34,35,36,37,38,39],weights:[28,22,17,12,9,7,5]},
-{name:"Галактический кейс",emoji:"🌌",price:2500000,pool:[34,35,36,37,38,39,40],weights:[30,23,17,12,8,6,4]},
-{name:"Королевский кейс",emoji:"👑",price:5000000,pool:[35,36,37,38,39,40],weights:[32,24,18,12,8,6]}
+{name:"Free Case",price:0,emoji:"🎁",min:0},
+{name:"Обычный кейс",price:100,emoji:"📦",min:0},
+{name:"Редкий кейс",price:500,emoji:"💎",min:1},
+{name:"Легендарный кейс",price:2000,emoji:"👑",min:2},
+{name:"Секретный кейс",price:10000,emoji:"🌌",min:3}
 ];
-
-function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(db))}
+function freshAccount(name,pass){
+return {name,pass,coins:500,energy:30,inventory:[],clickLevel:1,clickPower:1,lastDaily:"",usedCodes:[],telegramRewards:[],referrals:0,refCases:0,created:Date.now()};
+}
 function load(){
- try{db=JSON.parse(localStorage.getItem(STORAGE_KEY)||"null")||db}catch(e){}
- if(!db.accounts)db.accounts={};
- if(!db.codes)db.codes={};
- if(!db.battles)db.battles=[];
+try{
+const raw=localStorage.getItem(STORAGE_KEY);
+if(raw)db=JSON.parse(raw);
+}catch(e){db={accounts:{},codes:{},battles:[]}}
+if(!db.accounts)db.accounts={};
+if(!db.codes)db.codes={};
+if(!db.battles)db.battles=[];
 }
-function normalizeUser(u,name){
- u.name=u.name||name;
- u.coins=Number(u.coins)||0;
- u.inventory=Array.isArray(u.inventory)?u.inventory:[];
- u.energy=Number.isFinite(u.energy)?u.energy:30;
- u.clickLevel=u.clickLevel||1;
- u.refCases=u.refCases||0;
- u.refCount=u.refCount||0;
- u.usedCodes=Array.isArray(u.usedCodes)?u.usedCodes:[];
- u.lastDaily=u.lastDaily||"";
- u.telegramClaims=u.telegramClaims||{};
- u.lastEnergyTime=u.lastEnergyTime||Date.now();
- return u;
+function save(){
+try{localStorage.setItem(STORAGE_KEY,JSON.stringify(db))}
+catch(e){console.error("Не удалось сохранить игру",e)}
 }
-function user(){return currentUser?db.accounts[currentUser]:null}
-function msg(id,t){$(id).textContent=t}
-
+function msg(id,text){
+const el=$(id);if(el)el.textContent=text;
+}
 function register(){
- const name=$("authName").value.trim().toLowerCase();
- const pass=$("authPass").value;
- if(!/^[a-z0-9_]{3,20}$/i.test(name))return msg("authMsg","Имя: от 3 до 20 букв, цифр или _.");
- if(pass.length<3)return msg("authMsg","Пароль должен быть не короче 3 символов.");
- if(db.accounts[name])return msg("authMsg","Такой аккаунт уже есть.");
- db.accounts[name]={password:pass,name,coins:500,inventory:[],energy:30,clickLevel:1,refCases:0,refCount:0,usedCodes:[],lastDaily:"",telegramClaims:{},lastEnergyTime:Date.now()};
- save();
- enter(name);
+const name=$("authName").value.trim();
+const pass=$("authPass").value;
+if(name.length<3||name.length>20||!pass)return msg("authMsg","Имя должно содержать 3–20 символов. Введи пароль.");
+if(db.accounts[name])return msg("authMsg","Такой аккаунт уже существует.");
+db.accounts[name]=freshAccount(name,pass);
+save();currentUser=name;showGame();
 }
 function login(){
- const name=$("authName").value.trim().toLowerCase();
- const pass=$("authPass").value;
- const u=db.accounts[name];
- if(!u||u.password!==pass)return msg("authMsg","Неправильное имя или пароль.");
- enter(name);
-}
-function enter(name){
- if(!db.accounts[name])return;
- currentUser=name;
- normalizeUser(user(),name);
- localStorage.setItem(SESSION_KEY,name);
- $("auth").classList.add("hidden");
- $("game").classList.remove("hidden");
- renderAll();
- page("cases");
- checkReferral();
- save();
+const name=$("authName").value.trim();
+const pass=$("authPass").value;
+if(!db.accounts[name]||db.accounts[name].pass!==pass)return msg("authMsg","Неправильное имя или пароль.");
+currentUser=name;showGame();
 }
 function logout(){
- currentUser=null;
- road=null;
- clearTimeout(openingTimer);
- pendingDrop=null;
- localStorage.removeItem(SESSION_KEY);
- $("game").classList.add("hidden");
- $("auth").classList.remove("hidden");
- $("authPass").value="";
- msg("authMsg","Ты вышел из аккаунта. Можешь войти снова.");
+currentUser=null;
+road=null;
+if(openingTimer)clearTimeout(openingTimer);
+$("game").classList.add("hidden");
+$("auth").classList.remove("hidden");
+}
+function me(){return db.accounts[currentUser]}
+function showGame(){
+$("auth").classList.add("hidden");
+$("game").classList.remove("hidden");
+page("cases");
+renderAll();
 }
 function page(name){
- ["cases","collection","clicker","dice","upgrade","road","battles","codes","referrals","bonus","profile"].forEach(p=>$(p+"Page").classList.toggle("hidden",p!==name));
- if(name==="collection")renderInventory();
- if(name==="upgrade")renderUpgradeOptions();
- if(name==="dice")renderDiceOptions();
- if(name==="road")renderRoadOptions();
- if(name==="battles")renderBattles();
- if(name==="codes")renderCodes();
- if(name==="profile")renderProfile();
- if(name==="referrals")renderReferrals();
-}
-function imageTag(emoji,alt){
- return '<img src="'+emojiUrl(emoji)+'" alt="'+String(alt).replace(/"/g,"")+'" onerror="this.style.display=\'none\'">';
-}
-function renderCases(){
- $("caseGrid").innerHTML=cases.map((c,i)=>'<div class="card">'+imageTag(c.emoji,c.name)+
- '<h3>'+c.name+'</h3><p>🪙 '+c.price.toLocaleString("ru-RU")+
- '</p><p class="small">Персонажей: '+c.pool.length+'</p><button onclick="openCase('+i+')">Открыть</button></div>').join("");
+document.querySelectorAll("main>section").forEach(s=>s.classList.add("hidden"));
+const el=$(name+"Page");
+if(el)el.classList.remove("hidden");
+if(name==="codes")renderCodes();
+if(name==="cases")renderCases();
+if(name==="collection")renderInventory();
+if(name==="dice")renderSelects();
+if(name==="upgrade")renderSelects();
+if(name==="road")renderSelects();
+if(name==="battles")renderBattles();
+if(name==="profile")renderProfile();
 }
 function renderAll(){
- if(!user())return;
- updateStats();
- $("clickLevel").textContent=user().clickLevel;
- $("clickPower").textContent=user().clickLevel;
- $("clickImg").src=emojiUrl("🧠");
- renderCases();
- renderInventory();
- renderUpgradeOptions();
- renderBattleCases();
- renderDiceOptions();
- renderRoadOptions();
+if(!currentUser||!me())return;
+$("statName").textContent=currentUser;
+$("coins").textContent=me().coins;
+$("count").textContent=me().inventory.length;
+$("energy").textContent=me().energy;
+$("clickLevel").textContent=me().clickLevel;
+$("clickPower").textContent=me().clickPower;
+$("clickImg").src=emojiUrl("🧠");
+$("refCount").textContent=me().referrals;
+$("refCases").textContent=me().refCases;
+$("refLink").value=location.href.split("?")[0]+"?ref="+encodeURIComponent(currentUser);
+renderCases();renderInventory();renderSelects();renderCodes();renderBattles();renderProfile();
 }
-function weightedDrop(c){
- const total=c.weights.reduce((a,b)=>a+b,0);
- let r=Math.random()*total;
- for(let i=0;i<c.pool.length;i++){
-  r-=c.weights[i];
-  if(r<0)return brainrots[c.pool[i]];
- }
- return brainrots[c.pool[c.pool.length-1]];
+function renderCases(){
+const grid=$("caseGrid");if(!grid)return;
+grid.innerHTML="";
+cases.forEach((c,i)=>{
+const card=document.createElement("div");
+card.className="card";
+const title=document.createElement("h3");
+title.textContent=c.emoji+" "+c.name;
+const price=document.createElement("p");
+price.textContent=c.price===0?"Бесплатно":"Цена: "+c.price+" 🪙";
+const btn=document.createElement("button");
+btn.textContent="Открыть";
+btn.addEventListener("click",()=>openCase(i));
+card.append(title,price,btn);grid.appendChild(card);
+});
 }
-function openCase(i){
- if(pendingDrop)return msg("caseMsg","Сначала закончи открытие предыдущего кейса.");
- const c=cases[i];
- if(!c)return;
- if(user().coins<c.price)return msg("caseMsg","Не хватает монет!");
- user().coins-=c.price;
- save();
- updateStats();
- pendingDrop=weightedDrop(c);
- $("caseOpening").classList.remove("hidden");
- $("caseOpening").classList.add("spinning");
- $("openingTitle").textContent=c.name;
- $("openingText").textContent="Ищем брейнрота...";
- $("openingImg").src=emojiUrl(c.emoji);
- $("skipBtn").disabled=false;
- clearTimeout(openingTimer);
- openingTimer=setTimeout(finishOpen,1400);
+function pickBrainrot(min=0){
+let pool=brainrots.filter(b=>b.chance>=1);
+if(min===1)pool=pool.filter(b=>["Редкий","Эпический","Легендарный","ОГ","Секрет"].includes(b.rarity));
+if(min===2)pool=pool.filter(b=>["Эпический","Легендарный","ОГ","Секрет"].includes(b.rarity));
+if(min>=3)pool=pool.filter(b=>b.rarity==="Секрет"||b.rarity==="ОГ");
+if(!pool.length)pool=brainrots;
+const weights=pool.map(b=>1/Math.max(1,b.chance));
+let r=Math.random()*weights.reduce((a,b)=>a+b,0);
+for(let i=0;i<pool.length;i++){r-=weights[i];if(r<=0)return pool[i]}
+return pool[0];
+}
+function openCase(index){
+const c=cases[index];if(!c)return;
+if(c.price>me().coins)return msg("caseMsg","Не хватает монет!");
+if(openingTimer)clearTimeout(openingTimer);
+me().coins-=c.price;
+const drop=pickBrainrot(c.min);
+pendingDrop=drop;
+$("caseOpening").classList.remove("hidden");
+$("caseOpening").classList.add("spinning");
+$("openingImg").src=emojiUrl("🎁");
+$("openingTitle").textContent="Открываем кейс...";
+$("openingText").textContent="Кейс: "+c.name;
+$("skipBtn").disabled=false;
+msg("caseMsg","Удачи!");
+renderAll();
+openingTimer=setTimeout(()=>finishOpen(),1800);
+}
+function finishOpen(){
+if(!pendingDrop)return;
+if(openingTimer)clearTimeout(openingTimer);
+openingTimer=null;
+const b=pendingDrop;pendingDrop=null;
+me().inventory.push({...b,id:Date.now()+Math.random()});
+$("caseOpening").classList.remove("spinning");
+$("openingImg").src=emojiUrl(b.emoji);
+$("openingTitle").textContent="Выпал: "+b.name+"!";
+$("openingText").textContent=b.rarity+" • Стоимость: "+b.value+" монет";
+$("skipBtn").disabled=true;
+msg("caseMsg","Поздравляем! Ты получил "+b.name+".");
+save();renderAll();
 }
 function skipOpen(){if(pendingDrop)finishOpen()}
-function finishOpen(){
- if(!pendingDrop)return;
- clearTimeout(openingTimer);
- const b=pendingDrop;
- pendingDrop=null;
- $("caseOpening").classList.remove("spinning");
- $("openingImg").src=emojiUrl(b.emoji);
- $("openingTitle").textContent=b.name;
- $("openingText").textContent="Редкость: "+b.rarity+" • Стоимость: "+b.value.toLocaleString("ru-RU")+" монет";
- user().inventory.push({...b,obtained:Date.now(),mutation:"Обычная"});
- msg("caseMsg","🎉 Выпал "+b.name+"! Он добавлен в коллекцию.");
- $("skipBtn").disabled=true;
- save();
- renderAll();
- setTimeout(()=>$("caseOpening").classList.add("hidden"),1800);
-}
-function updateStats(){
- if(!user())return;
- $("coins").textContent=user().coins.toLocaleString("ru-RU");
- $("count").textContent=user().inventory.length;
- $("energy").textContent=user().energy;
- $("statName").textContent=user().name;
-}
 function renderInventory(){
- if(!currentUser)return;
- $("collectionCount").textContent=user().inventory.length;
- if(!user().inventory.length){
-  $("inventory").innerHTML='<div class="notice">Коллекция пока пустая. Открой кейс!</div>';
-  return;
- }
- $("inventory").innerHTML=user().inventory.map((b,i)=>'<div class="card">'+imageTag(b.emoji,b.name)+
- '<h3>'+b.name+'</h3><p>'+b.rarity+'</p><p class="small">'+(b.mutation||"Обычная")+
- '</p><p>💰 '+b.value.toLocaleString("ru-RU")+
- '</p><button onclick="sellOne('+i+')">Продать за '+Math.max(1,Math.floor(b.value*.5)).toLocaleString("ru-RU")+'</button></div>').join("");
+const grid=$("inventory");if(!grid)return;
+grid.innerHTML="";
+$("collectionCount").textContent=me().inventory.length;
+if(!me().inventory.length){grid.textContent="Коллекция пока пуста. Открой кейс!";return}
+me().inventory.forEach((b,i)=>{
+const card=document.createElement("div");card.className="card";
+const img=document.createElement("img");img.src=emojiUrl(b.emoji);img.alt=b.name;
+const title=document.createElement("h3");title.textContent=b.name;
+const rarity=document.createElement("p");rarity.textContent=b.rarity;
+const value=document.createElement("p");value.textContent="💰 "+b.value;
+const sell=document.createElement("button");sell.textContent="Продать";
+sell.addEventListener("click",()=>sellItem(i));
+card.append(img,title,rarity,value,sell);grid.appendChild(card);
+});
 }
-function sellOne(i){
- const b=user().inventory[i];
- if(!b)return;
- const amount=Math.max(1,Math.floor(b.value*.5));
- user().coins+=amount;
- user().inventory.splice(i,1);
- save();renderAll();
- msg("caseMsg","Продан "+b.name+". Получено "+amount+" монет.");
+function sellItem(index){
+const item=me().inventory[index];if(!item)return;
+me().coins+=item.value;
+me().inventory.splice(index,1);
+save();renderAll();msg("caseMsg","Продано за "+item.value+" монет.");
 }
 function sellAll(){
- if(!user().inventory.length)return msg("profileInfo","Коллекция пустая.");
- const total=user().inventory.reduce((s,b)=>s+Math.max(1,Math.floor(b.value*.5)),0);
- user().coins+=total;
- user().inventory=[];
- save();renderAll();renderProfile();
-}
-function restoreEnergy(){
- if(!user())return;
- const u=user(),now=Date.now(),last=u.lastEnergyTime||now;
- const gained=Math.floor((now-last)/60000);
- if(gained>0){
-  u.energy=Math.min(30,u.energy+gained);
-  u.lastEnergyTime=last+gained*60000;
-  save();
- }
+if(!me().inventory.length)return msg("profileInfo","Коллекция уже пуста.");
+const total=me().inventory.reduce((sum,b)=>sum+b.value,0);
+me().coins+=total;me().inventory=[];
+save();renderAll();msg("profileInfo","Все персонажи проданы за "+total+" монет.");
 }
 function clickBrainrot(){
- restoreEnergy();
- if(user().energy<=0)return msg("clickMsg","Энергия закончилась. Подожди, она восстановится!");
- user().energy--;
- user().coins+=user().clickLevel;
- msg("clickMsg","+"+user().clickLevel+" монет!");
- save();updateStats();
+if(me().energy<=0)return msg("clickMsg","Энергия закончилась. Попробуй позже.");
+me().energy--;
+me().coins+=me().clickPower;
+save();renderAll();msg("clickMsg","+"+me().clickPower+" монет!");
 }
 function levelUp(){
- const price=user().clickLevel*100;
- if(user().coins<price)return msg("clickMsg","Нужно "+price+" монет для улучшения.");
- user().coins-=price;
- user().clickLevel++;
- save();renderAll();
- msg("clickMsg","Уровень повышен! Новый доход за клик: "+user().clickLevel);
+const cost=me().clickLevel*100;
+if(me().coins<cost)return msg("clickMsg","Нужно "+cost+" монет.");
+me().coins-=cost;me().clickLevel++;me().clickPower+=1;
+save();renderAll();msg("clickMsg","Уровень повышен! Теперь клик приносит "+me().clickPower+".");
 }
-function renderDiceOptions(){
- if(!currentUser)return;
- $("diceItem").innerHTML=user().inventory.map((b,i)=>'<option value="'+i+'">'+b.name+' ('+b.value.toLocaleString("ru-RU")+' монет)</option>').join("")||'<option value="">Нет персонажей</option>';
+function renderSelects(){
+["diceItem","upgradeItem","roadItem"].forEach(id=>{
+const el=$(id);if(!el)return;
+el.innerHTML="";
+me().inventory.forEach((b,i)=>{
+const o=document.createElement("option");o.value=i;o.textContent=b.name+" — "+b.value+" монет";el.appendChild(o);
+});
+if(!me().inventory.length){const o=document.createElement("option");o.textContent="Коллекция пуста";el.appendChild(o)}
+});
+const sel=$("battleCase");if(sel){sel.innerHTML="";cases.forEach((c,i)=>{const o=document.createElement("option");o.value=i;o.textContent=c.name+" — "+c.price+" монет";sel.appendChild(o)})}
 }
 function rollDice(){
- const i=Number($("diceItem").value),b=user().inventory[i];
- if(!b)return msg("diceMsg","Сначала получи брейнрота в кейсе.");
- const rolls=Array.from({length:2},()=>Math.floor(Math.random()*6)+1);
- $("diceFaces").textContent=rolls.map(n=>["⚀","⚁","⚂","⚃","⚄","⚅"][n-1]).join("   ");
- if(rolls[0]+rolls[1]>=8){
-  b.value=Math.floor(b.value*1.5);
-  b.mutation="Кубиковый";
-  msg("diceMsg","🎉 Победа! "+b.name+" усилился. Новая стоимость: "+b.value.toLocaleString("ru-RU"));
- }else{
-  user().inventory.splice(i,1);
-  msg("diceMsg","Не повезло! Ставка "+b.name+" потеряна.");
- }
- save();renderAll();
-}
-function renderUpgradeOptions(){
- if(!currentUser)return;
- $("upgradeItem").innerHTML=user().inventory.map((b,i)=>'<option value="'+i+'">'+b.name+' ('+b.value.toLocaleString("ru-RU")+' монет)</option>').join("")||'<option value="">Нет брейнротов</option>';
+const index=Number($("diceItem").value),b=me().inventory[index];
+if(!b)return msg("diceMsg","Сначала получи персонажа.");
+const a=1+Math.floor(Math.random()*6),c=1+Math.floor(Math.random()*6);
+$("diceFaces").textContent="🎲 "+a+"   🎲 "+c;
+if(a+c>=8){b.value=Math.round(b.value*1.5);msg("diceMsg","Победа! Стоимость персонажа увеличена.")}
+else{me().inventory.splice(index,1);msg("diceMsg","Не повезло! Персонаж потерян в этой игровой ставке.")}
+save();renderAll();
 }
 function upgrade(){
- if(upgradeBusy)return;
- const i=Number($("upgradeItem").value),b=user().inventory[i];
- if(!b)return msg("upgradeMsg","Сначала открой кейс и получи персонажа.");
- upgradeBusy=true;
- const pointer=$("pointer");
- pointer.style.transition="transform .65s cubic-bezier(.08,.95,.16,1)";
- pointer.style.transform="rotate("+(1080+Math.random()*360)+"deg)";
- $("upgradeMsg").textContent="Стрелка быстро крутится...";
- setTimeout(()=>{
-  if(!currentUser){upgradeBusy=false;return}
-  const target=user().inventory[i];
-  if(!target){upgradeBusy=false;return msg("upgradeMsg","Персонаж больше не найден.")}
-  if(Math.random()<.7){
-   target.value=Math.floor(target.value*1.6);
-   target.rarity=target.rarity==="Обычный"?"Редкий":target.rarity==="Редкий"?"Эпический":target.rarity==="Эпический"?"Легендарный":target.rarity;
-   target.mutation="Улучшенный";
-   msg("upgradeMsg","✨ Успех! Стоимость "+target.name+" теперь "+target.value.toLocaleString("ru-RU")+" монет.");
-  }else msg("upgradeMsg","Неудача! Персонаж сохранён, попробуй ещё раз.");
-  save();renderAll();upgradeBusy=false;
- },700);
+if(upgradeBusy)return;
+const index=Number($("upgradeItem").value),b=me().inventory[index];
+if(!b)return msg("upgradeMsg","Сначала получи персонажа.");
+upgradeBusy=true;
+$("pointer").style.transform="rotate("+(Math.random()*360+720)+"deg)";
+setTimeout(()=>{
+if(Math.random()<0.7){b.value=Math.round(b.value*1.5);msg("upgradeMsg","Успех! Стоимость выросла до "+b.value+".")}
+else msg("upgradeMsg","Неудача! Персонаж остался прежним.");
+upgradeBusy=false;save();renderAll();
+},900);
 }
-function renderRoadOptions(){
- if(!currentUser)return;
- $("roadItem").innerHTML=user().inventory.map((b,i)=>'<option value="'+i+'">'+b.name+' ('+b.value.toLocaleString("ru-RU")+' монет)</option>').join("")||'<option value="">Нет брейнротов</option>';
-}
-function drawRoad(){
- const track=$("roadTrack");
- track.innerHTML="";
- for(let n=0;n<=5;n++){
-  const d=document.createElement("span");
-  d.className="road-step"+(road&&n<road.steps?" done":"")+(road&&n===road.steps?" current":"");
-  d.textContent=n===0?"🏁":n===5?"🏆":n;
-  track.appendChild(d);
- }
- $("roadMultiplier").textContent="x"+(road?road.multiplier.toFixed(2):"1.00");
- $("roadSteps").textContent="Шагов: "+(road?road.steps:0);
- $("roadStatus").textContent=road?"Ставка: "+road.name:"Выбери брейнрота";
-}
-function startRoad(){
- if(road)return msg("roadMsg","Сначала забери награду или закончи текущую попытку.");
- const i=Number($("roadItem").value),b=user().inventory[i];
- if(!b)return msg("roadMsg","Сначала получи брейнрота.");
- road={index:i,name:b.name,value:b.value,steps:0,multiplier:1};
- msg("roadMsg","Ставка принята. Решай, идти дальше или забрать награду.");
- drawRoad();
-}
-function advanceRoad(){
- if(!road)return msg("roadMsg","Сначала начни игру.");
- if(road.steps>=5)return msg("roadMsg","Достигнут финиш! Забери награду.");
- if(Math.random()<.28){
-  const b=user().inventory[road.index];
-  if(b&&b.name===road.name)user().inventory.splice(road.index,1);
-  msg("roadMsg","💥 Неудача! Ставка потеряна.");
-  road=null;save();renderAll();drawRoad();return;
- }
- road.steps++;
- road.multiplier*=1.55;
- msg("roadMsg","Успех! Множитель вырос. Можно рискнуть ещё раз или забрать награду.");
- drawRoad();
-}
-function collectRoad(){
- if(!road)return msg("roadMsg","Нет активной ставки.");
- const b=user().inventory[road.index];
- if(!b||b.name!==road.name){
-  road=null;drawRoad();
-  return msg("roadMsg","Персонаж больше не найден.");
- }
- const reward=Math.floor(road.value*road.multiplier);
- user().coins+=reward;
- user().inventory.splice(road.index,1);
- msg("roadMsg","🏆 Забрал "+reward.toLocaleString("ru-RU")+" монет! Персонаж обменян на награду.");
- road=null;save();renderAll();drawRoad();
-}
-function renderBattleCases(){
- $("battleCase").innerHTML=cases.map((c,i)=>'<option value="'+i+'">'+c.name+' — '+c.price.toLocaleString("ru-RU")+'</option>').join("");
-}
-function createBattle(){
- const i=Number($("battleCase").value),c=cases[i];
- if(user().coins<c.price)return msg("battleMsg","Не хватает монет на батл!");
- user().coins-=c.price;
- db.battles.unshift({id:Date.now(),owner:currentUser,caseIndex:i,status:"open",created:Date.now()});
- save();renderAll();renderBattles();msg("battleMsg","Батл создан!");
-}
-function renderBattles(){
- if(!currentUser)return;
- const available=db.battles.filter(b=>b.status==="open"&&b.owner!==currentUser);
- const mine=db.battles.filter(b=>b.owner===currentUser);
- $("battleList").innerHTML=available.length?available.map(b=>'<div class="card"><h3>'+cases[b.caseIndex].name+'</h3><p>Игрок: '+b.owner+'</p><button onclick="joinBattle('+b.id+')">Присоединиться за '+cases[b.caseIndex].price.toLocaleString("ru-RU")+'</button></div>').join(""):'<p>Нет открытых батлов других игроков.</p>';
- $("battleList").innerHTML+='<div class="card"><h3>Мои батлы</h3><p>'+mine.length+'</p>'+mine.filter(b=>b.status==="finished").map(b=>'<p>'+b.result+'</p>').join("")+'</div>';
-}
-function joinBattle(id){
- const b=db.battles.find(x=>x.id===id&&x.status==="open");
- if(!b)return msg("battleMsg","Этот батл уже завершён.");
- const c=cases[b.caseIndex];
- if(user().coins<c.price)return msg("battleMsg","Не хватает монет!");
- if(!db.accounts[b.owner])return msg("battleMsg","Аккаунт создателя не найден.");
- user().coins-=c.price;
- b.status="finished";b.joiner=currentUser;
- const a=weightedDrop(c),d=weightedDrop(c);
- const winner=a.value>=d.value?b.owner:currentUser;
- db.accounts[b.owner].inventory.push({...a,obtained:Date.now()});
- user().inventory.push({...d,obtained:Date.now()});
- if(winner===b.owner)db.accounts[b.owner].coins+=Math.floor(c.price*.5);
- else user().coins+=Math.floor(c.price*.5);
- b.result="Победитель: "+winner;
- save();renderAll();renderBattles();msg("battleMsg",b.result+". Твой выпад: "+d.name);
-}
-function isCodeCreator(){return currentUser==="lnoagent111"}
-function renderCodes(){
- $("codeList").innerHTML=Object.keys(db.codes).length?Object.entries(db.codes).map(([k,v])=>'<div class="card"><h3>'+k+'</h3><p>Награда: '+v.reward+'</p><p>Осталось: '+v.uses+'</p>'+(isCodeCreator()?'<button onclick="deleteCode('+JSON.stringify(k)+')">Удалить</button>':'')+'</div>').join(""):'<p>Промокодов пока нет.</p>';
-}
-function createCode(){
- if(!isCodeCreator())return msg("codeCreateMsg","Создавать коды может только lnoagent111.");
- const code=$("newCode").value.trim().toUpperCase().replace(/\s/g,"");
- const reward=Math.floor(Number($("codeReward").value));
- const uses=Math.floor(Number($("codeUses").value));
- if(!/^[A-Z0-9_-]{2,30}$/.test(code)||reward<1||uses<1)return msg("codeCreateMsg","Проверь код, награду и число активаций.");
- if(db.codes[code])return msg("codeCreateMsg","Такой код уже существует.");
- db.codes[code]={reward,uses};
- save();renderCodes();msg("codeCreateMsg","Код создан!");
-}
-function deleteCode(code){
- if(!isCodeCreator())return;
- delete db.codes[code];save();renderCodes();
-}
-function redeem(){
- const code=$("redeemCode").value.trim().toUpperCase().replace(/\s/g,"");
- const c=db.codes[code];
- if(!c)return msg("codeMsg","Такого промокода нет.");
- if(user().usedCodes.includes(code))return msg("codeMsg","Ты уже активировал этот код.");
- if(c.uses<=0)return msg("codeMsg","Активации этого кода закончились.");
- user().coins+=c.reward;
- c.uses--;
- user().usedCodes.push(code);
- save();updateStats();renderCodes();msg("codeMsg","Получено "+c.reward+" монет!");
-}
-function renderReferrals(){
- $("refLink").value=location.href.split("?")[0]+"?ref="+encodeURIComponent(currentUser);
- $("refCount").textContent=user().refCount;
- $("refCases").textContent=user().refCases;
-}
-async function copyReferral(){
- const input=$("refLink");
- try{
-  await navigator.clipboard.writeText(input.value);
-  msg("refMsg","Ссылка скопирована!");
- }catch(e){
-  input.select();
-  msg("refMsg","Ссылка выделена. Скопируй её вручную.");
- }
-}
-function openRefCase(){
- if(user().refCases<=0)return msg("refMsg","Пока нет реферальных кейсов.");
- user().refCases--;
- const b=weightedDrop(cases[1]);
- user().inventory.push({...b,obtained:Date.now(),mutation:"Реферальный"});
- save();renderAll();renderReferrals();msg("refMsg","Выпал "+b.name+"!");
-}
-function checkReferral(){
- const params=new URLSearchParams(location.search);
- const ref=params.get("ref");
- if(!ref||!db.accounts[ref]||ref===currentUser)return;
- const key="BrainrotEasy_ref_"+currentUser;
- if(localStorage.getItem(key))return;
- db.accounts[ref].refCount=(db.accounts[ref].refCount||0)+1;
- db.accounts[ref].refCases=(db.accounts[ref].refCases||0)+1;
- localStorage.setItem(key,"1");
- save();
-}
-function dailyBonus(){
- const today=new Date().toLocaleDateString("sv-SE");
- if(user().lastDaily===today)return msg("dailyMsg","Ежедневный бонус уже получен.");
- user().lastDaily=today;
- user().coins+=100;
- save();updateStats();
- msg("dailyMsg","Ты получил 100 монет! Приходи завтра.");
-}
-function telegramBonus(kind){
- const u=user();
- if(u.telegramClaims[kind])return msg("telegramMsg","Этот бонус уже был получен в демо-версии.");
- const reward=kind==="channel"?500:670;
- u.telegramClaims[kind]=true;
- u.coins+=reward;
- save();updateStats();
- msg("telegramMsg","Начислено "+reward+" монет. Подписка автоматически не проверяется.");
-}
-function renderProfile(){
- if(!currentUser)return;
- const u=user();
- $("profileInfo").textContent="Имя: "+u.name+" • Монеты: "+u.coins.toLocaleString("ru-RU")+" • Персонажей: "+u.inventory.length+" • Уровень кликера: "+u.clickLevel;
-}
-
-// Загружаем игру и автоматически восстанавливаем вход
-load();
-const savedUser=localStorage.getItem(SESSION_KEY);
-if(savedUser&&db.accounts[savedUser]){
- enter(savedUser);
-}else{
- localStorage.removeItem(SESSION_KEY);
-}
-setInterval(()=>{
- if(currentUser){
-  restoreEnergy();
-  updateStats();
- }
-},15000);
-drawRoad();
-</script>
-</body>
-</html>
