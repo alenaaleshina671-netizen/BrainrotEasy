@@ -2,969 +2,978 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BrainrotEasy 2.0</title>
 <style>
-:root{--bg:#100b12;--panel:#211522;--card:#2b1b2b;--border:#78401f;--orange:#ff7817;--text:#fff5f1}
+:root{
+  --bg:#100b12;--panel:#211522;--card:#2b1b2b;
+  --border:#78401f;--orange:#ff7817;--red:#ff3939;
+  --yellow:#ffc247;--text:#fff5f1;--muted:#c6a9a0;
+  --green:#45dc85;
+}
 *{box-sizing:border-box}
-body{margin:0;background:radial-gradient(ellipse at 0 15%,#49200e,transparent 35%),radial-gradient(ellipse at 100% 60%,#35140f,transparent 38%),var(--bg);color:var(--text);font:15px Arial,sans-serif;min-height:100vh;overflow-x:hidden}
-header{padding:20px 16px;background:linear-gradient(110deg,#35170d,#1a101d 65%,#251127);border-bottom:2px solid #8b481c;box-shadow:0 5px 25px #0008}
-header h1{margin:0;font-size:29px;font-weight:900;text-shadow:0 0 15px #ff781966}
-header p{color:#d6bdb3;font-size:13px;margin:9px 0 0}
-h2{color:#fff1e7;font-size:22px;font-weight:900}h3{color:#fff5ee}
-button{padding:12px 15px;background:linear-gradient(135deg,#ff8b25,#e65a08);color:white;border:1px solid #ffad55;border-radius:11px;font-weight:900;cursor:pointer;margin:3px;transition:.15s}
+body{
+  margin:0;color:var(--text);font-family:Arial,sans-serif;min-height:100vh;
+  background:radial-gradient(circle at 15% 0%,#52220f 0,transparent 35%),
+  radial-gradient(circle at 90% 20%,#35111e 0,transparent 35%),var(--bg);
+}
+button,input,select{font:inherit}
+button{
+  border:0;cursor:pointer;color:white;font-weight:bold;border-radius:12px;
+  padding:11px 15px;background:linear-gradient(135deg,#ff7817,#e63d19);
+  box-shadow:0 4px 15px #ff501b33;transition:.2s;
+}
 button:hover{filter:brightness(1.15);transform:translateY(-1px)}
 button:disabled{opacity:.45;cursor:not-allowed;transform:none}
-input,select{padding:12px;border-radius:10px;border:1px solid #67412f;background:#130d17;color:white;max-width:100%;outline:none}
-input{width:100%;margin:5px 0}
-nav{display:flex;flex-wrap:wrap;gap:5px;padding:10px;background:#171019ed;position:sticky;top:0;z-index:5;backdrop-filter:blur(12px)}
-nav button{font-size:12px;padding:10px;background:#30202a;border:1px solid #5c3a35}
-main{max-width:1100px;margin:auto;padding:12px;position:relative;z-index:1}
-.panel{background:linear-gradient(145deg,#21151f,#160f19);border:1px solid #704024;border-radius:19px;padding:15px;margin:12px 0;box-shadow:0 0 18px #ff75120b}
+input,select{
+  width:100%;padding:12px;margin:6px 0;color:white;background:#170f19;
+  border:1px solid var(--border);border-radius:10px;outline:none;
+}
+h1,h2,h3{margin-top:0}
+small,.muted{color:var(--muted)}
+#app{max-width:1150px;margin:auto;padding:14px}
+header{
+  text-align:center;padding:24px 10px;border:1px solid #a84c20;
+  border-radius:20px;background:linear-gradient(120deg,#35170f,#23131c,#45170e);
+  box-shadow:0 0 35px #ff5b1830;margin-bottom:14px;
+}
+.logo{font-size:clamp(30px,7vw,52px);font-weight:1000;color:#ff8b32;text-shadow:0 0 20px #ff4d18}
+.logo span{color:white}
+header p{color:#e9b6a0;margin-bottom:0}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:14px 0}
+.stat,.panel,.card{
+  background:linear-gradient(145deg,#2a1b2b,#1b121f);
+  border:1px solid var(--border);border-radius:15px;
+}
+.stat{padding:13px;text-align:center}
+.stat strong{display:block;font-size:20px;color:#ff9b43;margin-top:5px}
+nav{
+  display:flex;flex-wrap:wrap;gap:7px;margin:14px 0;padding:10px;
+  background:#1a111d;border:1px solid #58301e;border-radius:15px;
+}
+nav button{flex:1 1 105px;background:#35202b;box-shadow:none;padding:10px 8px}
+nav button.active{background:linear-gradient(135deg,#ff7817,#c92e1c)}
+.panel{padding:17px;margin-bottom:14px}
+.section{display:none}.section.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px}
+.card{padding:13px;text-align:center;position:relative;overflow:hidden}
+.card:hover{border-color:#ff8b32;box-shadow:0 0 18px #ff641f30}
+.character{font-size:48px;padding:12px 0;filter:drop-shadow(0 5px 9px #000)}
+.card h3{font-size:15px;margin:5px 0}
+.price{color:#ffc36c;font-weight:bold}
+.rarity{font-size:12px;color:#ffad63;margin:5px}
+.case-art{font-size:65px;padding:13px;text-shadow:0 0 22px #ff641f}
+.primary{width:100%;margin-top:8px}
+.secondary{background:#49303b;box-shadow:none}
+.danger{background:linear-gradient(135deg,#d93636,#8e1717)}
+.green{background:linear-gradient(135deg,#20a85a,#126d3a)}
+.notice{padding:12px;border-radius:12px;background:#3a241c;border:1px solid #a45b29;color:#ffd6ad;margin:10px 0}
 .hidden{display:none!important}
-.stats{display:flex;flex-wrap:wrap;gap:8px;padding:10px;background:#171019}
-.stat{background:#30202b;border:1px solid #583529;border-radius:12px;padding:12px 8px;flex:1;min-width:85px;text-align:center}
-.stat b{color:#ffb16b}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
-.card{background:linear-gradient(155deg,#30202b,#17101b);border:1px solid #794628;border-radius:17px;padding:12px 8px;text-align:center;overflow-wrap:anywhere;transition:.2s}
-.card:hover{border-color:#ff9a44;transform:translateY(-2px)}
-.card img{width:100px;height:100px;max-width:100%;object-fit:contain;border-radius:15px;background:#3b2630}
-.card h3{font-size:14px;min-height:28px}
-.card button{font-size:12px;padding:9px}
-.small{font-size:12px;color:#b8a8ba}
-.notice{background:linear-gradient(120deg,#39201f,#27172a);border:1px solid #714126;border-radius:12px;padding:12px;margin:10px 0;overflow-wrap:anywhere}
-#auth{max-width:430px;margin:25px auto}
-#caseOpening{max-width:460px;margin:20px auto;text-align:center;background:#38212a;border:2px solid #ff922e;border-radius:22px;padding:22px}
-#caseOpening img{width:130px;height:130px;object-fit:contain}
-.spinning img{animation:spin .45s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.wheelWrap{width:250px;height:250px;margin:18px auto;position:relative}
-.wheel{width:230px;height:230px;border:5px solid #ffb16b;border-radius:50%;position:absolute;left:10px;top:10px;background:conic-gradient(#35c96b 0 70%,#e94343 70% 100%);box-shadow:0 0 25px #ff8b3744}
-.pointer{position:absolute;z-index:2;top:0;left:calc(50% - 9px);border-left:9px solid transparent;border-right:9px solid transparent;border-top:32px solid white}
-.road-track,.diceResults{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:15px 0}
-.road-step{padding:10px;border-radius:9px;background:#392533;border:1px solid #68402f}
-.road-step.done{background:#18552e}.road-step.current{outline:2px solid #ff9b45}
-.rocket-stage{background:#321b26;border:1px solid #874a2c;border-radius:20px;padding:20px;text-align:center}
-#rocketVisual{font-size:65px;min-height:85px}
-#rocketMultiplier{font-size:38px;color:#ffb16b;font-weight:900}
-.rocket-bar{height:10px;background:#392635;border-radius:10px;overflow:hidden;margin:15px 0}
-#rocketBarFill{height:100%;width:0;background:linear-gradient(90deg,#ff7117,#ffcc57)}
-.colorChoices{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
-.colorChoice{width:42px;height:42px;border-radius:50%;padding:0;border:3px solid #fff8}
-.colorChoice.selected{outline:3px solid white;transform:scale(1.12)}
-.diceBall{width:45px;height:45px;border-radius:50%;border:3px solid #fff8}
-.fuseSlots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
-.fuseSlots select{width:100%;min-width:0}
-.catBox{max-width:390px;margin:18px auto;padding:18px;text-align:center;border:1px solid #b36b45;border-radius:22px;background:radial-gradient(circle at 50% 25%,#613522,#231421 75%)}
-#meowl{font-size:100px;cursor:pointer;display:inline-block;user-select:none;transition:transform .15s;filter:drop-shadow(0 0 15px #ffb15a)}
-#meowl:active{transform:scale(.82) rotate(-8deg)}
-.catBounce{animation:catBounce .35s ease}
-@keyframes catBounce{50%{transform:translateY(-15px) rotate(8deg) scale(1.1)}}
-.catBubble{min-height:30px;color:#ffd4a8;font-weight:900;font-size:18px}
-.leaf{position:fixed;top:-40px;z-index:0;pointer-events:none;animation:leafFall linear forwards;opacity:.75}
-@keyframes leafFall{0%{transform:translateY(-40px) rotate(0);opacity:0}10%{opacity:.8}100%{transform:translateY(110vh) translateX(100px) rotate(650deg);opacity:0}}
-footer{text-align:center;color:#a58d9e;padding:25px}
-@media(min-width:700px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+#auth{max-width:420px;margin:50px auto;padding:22px;background:var(--panel);border:1px solid var(--border);border-radius:18px}
+#auth h1{text-align:center;color:#ff8b32}
+.center{text-align:center}
+.wheel-wrap{width:min(300px,75vw);margin:20px auto;position:relative}
+.wheel{
+  width:100%;aspect-ratio:1;border-radius:50%;border:8px solid #ff9b35;
+  background:conic-gradient(#23b85e 0deg 360deg);
+  box-shadow:0 0 30px #ff5b2b70,inset 0 0 20px #0008;
+  transition:transform 3s cubic-bezier(.15,.7,.15,1);
+  display:grid;place-items:center;position:relative;
+}
+.wheel:after{
+  content:"100%";display:grid;place-items:center;width:42%;height:42%;
+  border-radius:50%;background:#241629;border:5px solid #ffb33d;
+  color:#65f59b;font-size:25px;font-weight:900;
+}
+.pointer{position:absolute;top:-12px;left:calc(50% - 15px);border-left:15px solid transparent;border-right:15px solid transparent;border-top:28px solid white;z-index:2}
+.progress{height:13px;background:#120d15;border-radius:20px;overflow:hidden;margin:10px 0}
+.progress div{height:100%;width:0%;background:linear-gradient(90deg,#ff3d19,#ffb42b);transition:width .3s}
+footer{text-align:center;color:#9e817b;padding:25px}
+#toast{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  background:#2b1b2b;border:1px solid #ff7817;padding:13px 20px;
+  border-radius:12px;z-index:20;display:none;box-shadow:0 0 20px #ff781755;
+}
+.case-card{background:linear-gradient(145deg,#49200f,#211522 70%);border-color:#d66b25}
+.case-card:nth-child(3n){background:linear-gradient(145deg,#36132f,#211522 70%)}
+.case-card:nth-child(3n+1){background:linear-gradient(145deg,#4b2511,#211522 70%)}
+.tag{display:inline-block;padding:4px 8px;border-radius:20px;background:#59321d;color:#ffd18b;font-size:11px;margin:3px}
+.profile-banner{padding:18px;border-radius:15px;background:linear-gradient(120deg,#762e12,#321728,#8d291b);text-align:center;margin-bottom:15px}
+.rocket-flight{animation:fly .7s infinite alternate}
+@keyframes fly{from{transform:translateY(5px) rotate(-4deg)}to{transform:translateY(-9px) rotate(4deg)}}
+@media(max-width:600px){
+  #app{padding:9px}.stats{grid-template-columns:repeat(2,1fr)}
+  .panel{padding:13px}nav button{flex:1 1 28%}
+}
 </style>
 </head>
 <body>
+
+<div id="auth">
+  <h1>🔥 BrainrotEasy</h1>
+  <p class="center muted">Войди или создай аккаунт</p>
+  <input id="authName" placeholder="Имя аккаунта" maxlength="20">
+  <input id="authPass" type="password" placeholder="Пароль">
+  <button class="primary" onclick="register()">Создать аккаунт</button>
+  <button class="primary secondary" onclick="login()">Войти</button>
+  <p class="muted center">Демо-версия: данные хранятся в этом браузере.</p>
+</div>
+
+<div id="app" class="hidden">
 <header>
-<h1>🧠 BrainrotEasy 2.0</h1>
-<p>Открывай кейсы, собирай брейнротов и прокачивай коллекцию!</p>
+  <div class="logo">BRAINROT<span>EASY</span></div>
+  <p>🔥 Открывай кейсы • Собирай брейнротов • Развивай коллекцию</p>
 </header>
 
-<section id="auth" class="panel">
-<h2>👤 Вход в игру</h2>
-<input id="authName" placeholder="Имя игрока" maxlength="20">
-<input id="authPass" type="password" placeholder="Пароль">
-<button onclick="register()">Регистрация</button>
-<button onclick="login()">Войти</button>
-<div id="authMsg" class="notice">Создай аккаунт или войди.</div>
-<p class="small">Демо-аккаунты хранятся в этом браузере. Не используй настоящий пароль.</p>
-</section>
-
-<div id="game" class="hidden">
 <div class="stats">
-<div class="stat">👤 <b id="statName">Игрок</b></div>
-<div class="stat">🪙 <b id="coins">0</b></div>
-<div class="stat">🧠 <b id="count">0</b></div>
-<div class="stat">⚡ <b id="energy">30</b>/30</div>
+  <div class="stat">👤 Игрок<strong id="playerName">---</strong></div>
+  <div class="stat">🪙 Монеты<strong id="coins">0</strong></div>
+  <div class="stat">🧠 Брейнроты<strong id="brainrotCount">0</strong></div>
+  <div class="stat">⚡ Энергия<strong id="energy">30/30</strong></div>
 </div>
-<nav>
-<button onclick="page('cases')">📦 Кейсы</button>
-<button onclick="page('collection')">🎒 Коллекция</button>
-<button onclick="page('clicker')">👆 Кликер</button>
-<button onclick="page('dice')">🎲 Кубики</button>
-<button onclick="page('upgrade')">🎯 Апгрейд</button>
-<button onclick="page('road')">🛣️ Дорога</button>
-<button onclick="page('rocket')">🚀 Ракета</button>
-<button onclick="page('fuse')">🧪 Fuse</button>
-<button onclick="page('codes')">🎟️ Коды</button>
-<button onclick="page('referrals')">👥 Рефералы</button>
-<button onclick="page('bonus')">🎁 Бонусы</button>
-<button onclick="page('profile')">👤 Профиль</button>
-<button onclick="logout()">Выйти</button>
+
+<nav id="nav">
+  <button class="active" onclick="showTab('cases',this)">🎁 Кейсы</button>
+  <button onclick="showTab('collection',this)">🧠 Коллекция</button>
+  <button onclick="showTab('clicker',this)">👆 Кликер</button>
+  <button onclick="showTab('upgrade',this)">⬆️ Апгрейд</button>
+  <button onclick="showTab('road',this)">🛣️ Дорога</button>
+  <button onclick="showTab('rocket',this)">🚀 Ракета</button>
+  <button onclick="showTab('dice',this)">🎲 Кубики</button>
+  <button onclick="showTab('fuse',this)">🔧 Объединение</button>
+  <button onclick="showTab('codes',this)">🎟️ Коды</button>
+  <button onclick="showTab('referrals',this)">👥 Рефералы</button>
+  <button onclick="showTab('bonus',this)">🎁 Бонусы</button>
+  <button onclick="showTab('profile',this)">👤 Профиль</button>
 </nav>
-<main>
 
-<section id="casesPage" class="panel">
-<h2>📦 Магазин кейсов</h2>
-<div id="caseGrid" class="grid"></div>
-<div id="caseOpening" class="hidden">
-<img id="openingImg" alt="Брейнрот">
-<h2 id="openingTitle">Открываем кейс...</h2>
-<p id="openingText">Сейчас узнаем, кто выпал!</p>
-<button id="skipBtn" onclick="skipOpen()">Пропустить</button>
+<section id="cases" class="section active">
+  <div class="panel">
+    <h2>🎁 Магазин кейсов</h2>
+    <p class="muted">Открывай кейсы и собирай коллекцию. Все награды — игровые.</p>
+    <div id="caseGrid" class="grid"></div>
+  </div>
+</section>
+
+<section id="collection" class="section">
+  <div class="panel">
+    <h2>🧠 Моя коллекция</h2>
+    <p class="muted">Здесь находятся все твои персонажи.</p>
+    <input id="collectionSearch" placeholder="🔎 Поиск персонажа..." oninput="renderInventory()">
+    <div id="inventory" class="grid"></div>
+  </div>
+</section>
+
+<section id="clicker" class="section">
+  <div class="panel center">
+    <h2>👆 Брейнрот-кликер</h2>
+    <div class="character">🧠</div>
+    <h3>Нажимай и получай монеты!</h3>
+    <p>Сила клика: <b id="clickPower">0.10</b> монет</p>
+    <p>Энергия: <b id="clickEnergy">30/30</b></p>
+    <div class="progress"><div id="energyBar"></div></div>
+    <button style="font-size:23px;padding:22px 45px" onclick="clickBrainrot()">👆 КЛИК!</button>
+    <p>Кликов: <b id="clickCount">0</b></p>
+    <p>Уровень: <b id="clickLevel">1</b></p>
+    <button class="green" onclick="buyClickUpgrade()">⬆️ Улучшить силу клика</button>
+    <p class="muted">Каждые 100 кликов уровень автоматически повышается.</p>
+  </div>
+</section>
+
+<section id="upgrade" class="section">
+  <div class="panel center">
+    <h2>🔥 Апгрейдер брейнротов</h2>
+    <p class="muted">Цель можно выбрать из полного списка, даже если её ещё нет в коллекции.</p>
+    <label>Твой персонаж:</label>
+    <select id="upgradeItem" onchange="updateUpgradeTargets()"></select>
+    <label>На кого улучшить:</label>
+    <select id="upgradeTarget" onchange="updateUpgradeInfo()"></select>
+    <div class="wheel-wrap">
+      <div class="pointer"></div>
+      <div class="wheel" id="upgradeWheel"></div>
+    </div>
+    <div class="notice" id="upgradeInfo">Выбери персонажа.</div>
+    <button class="primary" onclick="upgrade()">⬆️ Улучшить персонажа</button>
+    <p><span class="tag">100% успех</span><span class="tag">0% неудача</span></p>
+    <p class="muted">Колесо показывает гарантированный результат. Персонаж не теряется случайным образом.</p>
+  </div>
+</section>
+
+<section id="road" class="section">
+  <div class="panel center">
+    <h2>🛣️ Дорога брейнротов</h2>
+    <p>Проходи этапы и получай всё больше монет.</p>
+    <select id="roadItem" onchange="resetRoad()"></select>
+    <div class="character">🏁</div>
+    <h2 id="roadMultiplier">x1.00</h2>
+    <p id="roadStage">Этап: 0 / 15</p>
+    <div class="progress"><div id="roadBar"></div></div>
+    <button onclick="roadStep()">➡️ Следующий этап</button>
+    <button class="green" onclick="roadCollect()">💰 Забрать награду</button>
+    <p id="roadReward" class="notice">Награда появится после прохождения этапа.</p>
+    <p class="muted">Персонаж остаётся у тебя на всех этапах.</p>
+  </div>
+</section>
+
+<section id="rocket" class="section">
+  <div class="panel center">
+    <h2>🚀 Ракета</h2>
+    <p>Запускай ракету, наблюдай за полётом и забирай награду.</p>
+    <div class="character" id="rocketArt">🚀</div>
+    <h1 id="rocketMultiplier">x1.00</h1>
+    <p id="rocketLevel">Уровень: 0 / 10</p>
+    <div class="progress"><div id="rocketBar"></div></div>
+    <button onclick="rocketStart()">🚀 Запустить</button>
+    <button class="green" onclick="rocketCollect()">💰 Забрать монеты</button>
+    <p id="rocketReward" class="notice">Запусти ракету, чтобы начать.</p>
+    <p class="muted">Полёт не отнимает персонажей и не сбрасывает твои монеты.</p>
+  </div>
+</section>
+
+<section id="dice" class="section">
+  <div class="panel center">
+    <h2>🎲 Цветные кубики</h2>
+    <p>Выбери цвет. За правильное угадывание получишь монеты.</p>
+    <div id="diceColors" class="grid"></div>
+    <div class="character" id="diceArt">🎲</div>
+    <h2 id="diceResult">Выбери цвет!</h2>
+    <button onclick="rollDice()">🎲 Бросить кубики</button>
+    <p class="muted">Мини-игра бесплатная: нет ставок и потери персонажей.</p>
+  </div>
+</section>
+
+<section id="fuse" class="section">
+  <div class="panel center">
+    <h2>🔧 Объединение</h2>
+    <p>Объедини двух одинаковых персонажей и получи следующего по стоимости.</p>
+    <select id="fuseItem"></select>
+    <button class="primary" onclick="fuse()">🔧 Объединить</button>
+    <p class="muted">Для объединения нужны два одинаковых персонажа.</p>
+  </div>
+</section>
+
+<section id="codes" class="section">
+  <div class="panel">
+    <h2>🎟️ Промокоды</h2>
+    <input id="codeInput" placeholder="Введи промокод">
+    <button class="primary" onclick="useCode()">Активировать код</button>
+    <div id="adminCodeBox" class="hidden">
+      <hr><h3>🛠️ Создание промокодов</h3>
+      <input id="newCode" placeholder="Название кода">
+      <input id="newCodeCoins" type="number" placeholder="Количество монет">
+      <input id="newCodeUses" type="number" placeholder="Количество активаций">
+      <button onclick="createCode()">Создать промокод</button>
+      <div id="adminCodeList"></div>
+      <p class="muted">В демо-версии админская роль проверяется только по имени аккаунта и не защищена сервером.</p>
+    </div>
+  </div>
+</section>
+
+<section id="referrals" class="section">
+  <div class="panel center">
+    <h2>👥 Реферальная система</h2>
+    <div class="character">🤝</div>
+    <h3>Приглашай друзей!</h3>
+    <p>Твой код приглашения:</p>
+    <h2 id="refCode">---</h2>
+    <button onclick="copyReferral()">📋 Скопировать ссылку</button>
+    <p>Приглашено друзей: <b id="refCount">0</b></p>
+    <p>Реферальные кейсы: <b id="refCases">0</b></p>
+    <button class="green" onclick="openReferralCase()">🎁 Открыть реферальный кейс</button>
+    <div class="notice">Реферальный кейс выдаётся за новое приглашение. Для настоящей проверки между разными телефонами нужен сервер.</div>
+    <button class="secondary" onclick="window.open('https://t.me/BrainrotEasyy_bot','_blank')">Открыть Telegram-бота</button>
+  </div>
+</section>
+
+<section id="bonus" class="section">
+  <div class="panel center">
+    <h2>🎁 Ежедневные бонусы</h2>
+    <div class="character">🎁</div>
+    <h3>Забирай 250 монет каждый день!</h3>
+    <button class="green" onclick="dailyBonus()">Получить 250 монет</button>
+    <p id="dailyStatus" class="muted"></p>
+    <hr>
+    <h3>📢 Telegram</h3>
+    <button onclick="window.open('https://t.me/BrainEasyChannel','_blank')">Открыть канал</button>
+    <button onclick="window.open('https://t.me/BrainrotEasyy_bot','_blank')">Открыть бота</button>
+    <p class="muted">Автоматическая проверка подписки требует подключения Telegram-бота к серверу.</p>
+  </div>
+</section>
+
+<section id="profile" class="section">
+  <div class="panel">
+    <div class="profile-banner">
+      <div class="character">😎</div>
+      <h2 id="profileName">Игрок</h2>
+      <span class="tag">Игрок BrainrotEasy</span>
+    </div>
+    <h2>📊 Статистика</h2>
+    <div class="grid">
+      <div class="card">🪙 Монеты<h2 id="profileCoins">0</h2></div>
+      <div class="card">🧠 Персонажи<h2 id="profileCount">0</h2></div>
+      <div class="card">👆 Кликов<h2 id="profileClicks">0</h2></div>
+      <div class="card">👥 Приглашений<h2 id="profileRefs">0</h2></div>
+      <div class="card">⚡ Уровень клика<h2 id="profileClickLevel">1</h2></div>
+      <div class="card">🎁 Реферальные кейсы<h2 id="profileRefCases">0</h2></div>
+      <div class="card">🏆 Лучший персонаж<h2 id="profileBest">---</h2></div>
+      <div class="card">📦 Открыто кейсов<h2 id="profileCases">0</h2></div>
+    </div>
+    <h3>Быстрые переходы</h3>
+    <div class="grid">
+      <button onclick="showTab('cases')">🎁 Кейсы</button>
+      <button onclick="showTab('collection')">🧠 Коллекция</button>
+      <button onclick="showTab('upgrade')">⬆️ Апгрейд</button>
+      <button onclick="showTab('clicker')">👆 Кликер</button>
+      <button onclick="showTab('referrals')">👥 Рефералы</button>
+      <button onclick="showTab('bonus')">🎁 Бонусы</button>
+      <button onclick="showTab('codes')">🎟️ Коды</button>
+      <button onclick="showTab('rocket')">🚀 Ракета</button>
+    </div>
+    <hr>
+    <button class="danger primary" onclick="logout()">Выйти из аккаунта</button>
+  </div>
+</section>
+
+<footer>BrainrotEasy 2.0 • Демо-версия</footer>
 </div>
-<div id="caseMsg" class="notice">Выбери кейс!</div>
-<div class="catBox">
-<h2>🐱 Меовл-котёнок</h2>
-<div id="meowl" onclick="petMeowl()">🐱</div>
-<div class="catBubble" id="meowlSound">Нажми на Меовла!</div>
-<p class="small">Погладь котёнка, он любит мяукать!</p>
-</div>
-</section>
-
-<section id="collectionPage" class="panel hidden">
-<h2>🎒 Моя коллекция</h2>
-<p>Всего персонажей: <b id="collectionCount">0</b></p>
-<div id="inventory" class="grid"></div>
-</section>
-
-<section id="clickerPage" class="panel hidden">
-<h2>👆 Кликер</h2>
-<div class="card">
-<div style="font-size:75px">👆</div>
-<h3>Брейнрот-кликер</h3>
-<p>Уровень: <b id="clickLevel">1</b></p>
-<p>Доход за клик: <b id="clickPower">0.10</b> монет</p>
-<p>Всего кликов: <b id="clickCount">0</b></p>
-<button onclick="clickBrainrot()">КЛИК! 👆</button>
-<div id="clickMsg" class="notice">Кликай и постепенно повышай уровень!</div>
-</div>
-</section>
-
-<section id="dicePage" class="panel hidden">
-<h2>🎲 Цветные кубики</h2>
-<p>Выбери цвет и брейнрота. Бросаются четыре кубика.</p>
-<select id="diceItem"></select>
-<div id="diceColors" class="colorChoices"></div>
-<button onclick="rollDice()">🎲 Бросить кубики</button>
-<div id="diceFaces" class="diceResults"></div>
-<div id="diceMsg" class="notice">Выбери цвет и ставку.</div>
-</section>
-
-<section id="upgradePage" class="panel hidden">
-<h2>🎯 Апгрейдер</h2>
-<p>Выбери персонажа, которого отдаёшь, и персонажа, которого хочешь получить.</p>
-<label>Твоя ставка:</label><select id="upgradeItem"></select>
-<label>Желаемый брейнрот:</label><select id="upgradeTarget"></select>
-<p>Шанс успеха: <b id="upgradeChance">—</b></p>
-<div class="wheelWrap">
-<div class="pointer"></div>
-<div id="upgradeWheel" class="wheel"></div>
-</div>
-<button onclick="upgrade()">🎯 Крутить!</button>
-<div id="upgradeMsg" class="notice">Выбери двух персонажей.</div>
-</section>
-
-<section id="roadPage" class="panel hidden">
-<h2>🛣️ Дорога брейнротов</h2>
-<p>Дойди до x5. Чем дальше идёшь, тем опаснее!</p>
-<select id="roadItem"></select>
-<div class="card">
-<h3 id="roadStatus">Выбери брейнрота</h3>
-<h2 id="roadMultiplier">x1.00</h2>
-<p id="roadSteps">Шагов: 0 / 20</p>
-<div id="roadTrack" class="road-track"></div>
-<button onclick="startRoad()">🚀 Начать</button>
-<button onclick="advanceRoad()">➡️ Следующий шаг</button>
-<button onclick="collectRoad()">💰 Забрать награду</button>
-<div id="roadMsg" class="notice"></div>
-</div>
-</section>
-
-<section id="rocketPage" class="panel hidden">
-<h2>🚀 Ракета</h2>
-<p>Забирай награду вовремя! Максимум x10.</p>
-<div class="rocket-stage">
-<div id="rocketVisual">🚀</div>
-<div id="rocketMultiplier">x1.00</div>
-<div class="rocket-bar"><div id="rocketBarFill"></div></div>
-<p id="rocketStatus">Ракета готова!</p>
-</div>
-<select id="rocketItem"></select>
-<div id="rocketStakeInfo" class="notice">Выбери брейнрота.</div>
-<button id="rocketStartBtn" onclick="startRocket()">🚀 Запустить</button>
-<button id="rocketCashBtn" onclick="cashRocket()" disabled>💰 Забрать</button>
-<div id="rocketMsg" class="notice"></div>
-</section>
-
-<section id="fusePage" class="panel hidden">
-<h2>🧪 Fuse — объединение</h2>
-<p>Положи три брейнрота. Они исчезнут, а ты получишь одного нового персонажа.</p>
-<div class="fuseSlots">
-<select id="fuse1"></select>
-<select id="fuse2"></select>
-<select id="fuse3"></select>
-</div>
-<button onclick="fuse()">🧪 Объединить!</button>
-<div id="fuseMsg" class="notice">Выбери три разных персонажа.</div>
-</section>
-
-<section id="codesPage" class="panel hidden">
-<h2>🎟️ Промокоды</h2>
-<input id="redeemCode" placeholder="Введи промокод">
-<button onclick="redeem()">Активировать</button>
-<div id="codeMsg" class="notice"></div>
-<hr>
-<h3>Создание промокода</h3>
-<p class="small">В демо-версии создавать коды может аккаунт lnoagent111. Это не серверная защита.</p>
-<input id="newCode" placeholder="Название кода">
-<input id="codeReward" type="number" value="100" min="1">
-<input id="codeUses" type="number" value="5" min="1">
-<button onclick="createCode()">Создать</button>
-<div id="codeCreateMsg" class="notice"></div>
-<div id="codeList" class="grid"></div>
-</section>
-
-<section id="referralsPage" class="panel hidden">
-<h2>👥 Рефералы</h2>
-<p>Твоя ссылка:</p>
-<input id="refLink" readonly>
-<button onclick="copyReferral()">Скопировать</button>
-<p>Приглашено друзей: <b id="refCount">0</b></p>
-<p>Реферальных кейсов: <b id="refCases">0</b></p>
-<button onclick="openRefCase()">Открыть реферальный кейс</button>
-<div id="refMsg" class="notice"></div>
-</section>
-
-<section id="bonusPage" class="panel hidden">
-<h2>🎁 Ежедневный бонус</h2>
-<p>Получай 250 монет раз в день.</p>
-<button onclick="dailyBonus()">Получить 250 монет</button>
-<div id="dailyMsg" class="notice"></div>
-</section>
-
-<section id="profilePage" class="panel hidden">
-<h2>👤 Профиль</h2>
-<div id="profileInfo" class="notice"></div>
-<button onclick="sellAll()">Продать всю коллекцию</button>
-<button onclick="logout()">Выйти из аккаунта</button>
-</section>
-</main>
-</div>
-<footer>BrainrotEasy 2.0 © Демо-версия</footer>
+<div id="toast"></div>
 
 <script>
-"use strict";
-const $=id=>document.getElementById(id);
-const STORAGE_KEY="BrainrotEasy_demo_v6",SESSION_KEY="BrainrotEasy_loggedUser";
+const STORAGE_KEY="BrainrotEasy_demo_v6";
+const LOGIN_KEY="BrainrotEasy_loggedUser";
 
-let db={accounts:{},codes:{}};
+let db;
+try{db=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{"accounts":{},"codes":{}}')}catch(e){db={accounts:{},codes:{}}}
+if(!db.accounts)db.accounts={};
+if(!db.codes)db.codes={};
+
 let currentUser=null;
-let openingTimer=null;
-let pendingDrop=null;
 let upgradeBusy=false;
-let road=null;
-let rocket=null;
-let rocketTimer=null;
+let road={stage:0};
+let rocket={level:0,running:false,timer:null};
 let selectedDiceColor="red";
-let selectedTarget=null;
-
-function emojiUrl(emoji){
-const colors=["#ff8a24","#d946ef","#38bdf8","#facc15","#34d399","#fb7185"];
-let h=0;
-for(const c of emoji)h=(h*31+c.codePointAt(0))>>>0;
-const color=colors[h%colors.length];
-const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><rect x="4" y="4" width="152" height="152" rx="25" fill="#34202e" stroke="${color}" stroke-width="5"/><circle cx="80" cy="75" r="55" fill="${color}" opacity=".25"/><text x="80" y="105" text-anchor="middle" font-size="75">${emoji}</text></svg>`;
-return "data:image/svg+xml;charset=UTF-8,"+encodeURIComponent(svg);
-}
-
-function esc(s){
-return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-}
-function imageTag(e,a){
-return '<img src="'+emojiUrl(e)+'" alt="'+esc(a)+'">';
-}
-function msg(id,t){
-$(id).textContent=t;
-}
 
 const brainrots=[
-["Нубини Пиццанини","🍕",100,"Обычный"],["Триппи Троппи","🐟",1000,"Обычный"],["Бобритто Бандито","🦫",8000,"Обычный"],["Пицца Кот","🐈",10000,"Редкий"],["Сигма Гёрл","😎",15000,"Редкий"],["Фрулли Фрулла","🍓",15000,"Редкий"],["Тунг Тунг Сахур","🥁",25000,"Редкий"],["Бананини Чуппини","🍌",30000,"Редкий"],["Крабини Крабини","🦀",30000,"Редкий"],["Пингвино Кокосино","🐧",50000,"Эпический"],["Томатито","🍅",90000,"Эпический"],["Балерина Капучино","☕",60000,"Эпический"],["Шаркини","🦈",70000,"Эпический"],["Горилло Вотермен","🦍",160000,"Легендарный"],["Тралалеро Тралала","🦈",120000,"Легендарный"],["Бомбардиро Крокодило","🐊",200000,"Легендарный"],["Пандачини Бананини","🐼",220000,"Легендарный"],["Кенгуру Банангуру","🦘",180000,"Легендарный"],["Капучино Ассасино","🥷",350000,"Мифический"],["Китти Спагетти","🐈",400000,"Мифический"],["Крокодило Фрутти","🐊",500000,"Мифический"],["Мамут Рахал","🦣",650000,"Секретный"],["Ла Кукарача","🪳",800000,"Секретный"],["Роботино","🤖",1200000,"Секретный"],["Секретино","👾",2000000,"Секретный"],["Дракони Фруктини","🐉",2500000,"Секретный"],["Меовл","🐱",9000000,"OG"],["Скибиди Туалет","🚽",5000000,"OG"],["Мега Сигма","🗿",4000000,"OG"],["Радужный Брейнрот","🌈",7500000,"OG"],["Золотой Брейнрот","🥇",10000000,"OG"],["Космический Брейнрот","👽",20000000,"OG"],["Скибиди Омега","🚽",30000000,"OG"],["Золотой Тралалеро","🦈",50000000,"OG"],["Космический Нубини","👽",75000000,"OG"],["Босс Брейнротов","👑",100000000,"OG"],["Мега Дракони","🐲",150000000,"OG"],["Фантомино","👻",180000000,"OG"],["Огненный Тралалеро","🔥",250000000,"OG"],["Галактический Босс","🌌",500000000,"OG"],["Король Вселенной","👑",1000000000,"OG"],
-["Котини Понтини","🐈",120,"Обычный"],["Буррито Бандито","🌯",250,"Обычный"],["Арбузини","🍉",400,"Обычный"],["Лимонини","🍋",700,"Обычный"],["Кивини","🥝",1200,"Обычный"],["Пончико","🍩",2000,"Редкий"],["Тако Драко","🌮",3500,"Редкий"],["Сушини","🍣",5000,"Редкий"],["Пандыни","🐼",7000,"Редкий"],["Кокосини","🥥",9000,"Редкий"],["Морковини","🥕",13000,"Редкий"],["Крабини Пицца","🦀",18000,"Эпический"],["Лягушко Босс","🐸",26000,"Эпический"],["Котопус","🐙",35000,"Эпический"],["Ананасини","🍍",48000,"Эпический"],["Динозаврини","🦖",65000,"Эпический"],["Сырный Монстр","🧀",90000,"Легендарный"],["Пицца Дракон","🐉",125000,"Легендарный"],["Космо Кот","🐈",170000,"Легендарный"],["Мега Краб","🦀",230000,"Легендарный"],["Фантом Кот","👻",320000,"Мифический"],["Лунный Пингвин","🐧",450000,"Мифический"],["Звёздный Дракон","🐲",620000,"Мифический"],["Кибер Капучино","☕",850000,"Секретный"],["Тёмный Меовл","🐈‍⬛",1200000,"Секретный"],["Радужный Краб","🦀",1700000,"Секретный"],["Золотой Фантом","👻",2400000,"Секретный"],["Галакто Кот","🌌",3500000,"OG"],["Король Пиццы","🍕",5000000,"OG"],["Меовл Прайм","🐱",8000000,"OG"],["Абсолютный Кот","👑",15000000,"OG"]
+["Нубини Пиццанини","🍕",100,"Обычный"],
+["Триппи Троппи","🐸",1000,"Обычный"],
+["Бобритто Бандито","🦝",8000,"Обычный"],
+["Пицца Кот","🐱",10000,"Редкий"],
+["Сигма Гёрл","😎",15000,"Редкий"],
+["Фрулли Фрулла","🍓",15000,"Редкий"],
+["Тунг Тунг Сахур","🥁",25000,"Редкий"],
+["Бананини Чуппини","🍌",30000,"Редкий"],
+["Крабини Крабини","🦀",30000,"Редкий"],
+["Пингвино Кокосино","🐧",50000,"Эпический"],
+["Томатито","🍅",90000,"Эпический"],
+["Балерина Капучино","🩰",60000,"Эпический"],
+["Шаркини","🦈",70000,"Эпический"],
+["Горилло Вотермен","🦍",160000,"Легендарный"],
+["Тралалеро Тралала","🦈",120000,"Легендарный"],
+["Бомбардиро Крокодило","🐊",200000,"Легендарный"],
+["Пандачини Бананини","🐼",220000,"Легендарный"],
+["Кенгуру Банангуру","🦘",180000,"Легендарный"],
+["Капучино Ассасино","☕",350000,"Мифический"],
+["Китти Спагетти","🐈",400000,"Мифический"],
+["Крокодило Фрутти","🐊",500000,"Мифический"],
+["Мамут Рахал","🦣",650000,"Секретный"],
+["Ла Кукарача","🪳",800000,"Секретный"],
+["Роботино","🤖",1200000,"Секретный"],
+["Секретино","👾",2000000,"Секретный"],
+["Дракони Фруктини","🐉",2500000,"Секретный"],
+["Скибиди Туалет","🚽",5000000,"OG"],
+["Мега Сигма","🗿",4000000,"OG"],
+["Меовл","🐈",9000000,"OG"],
+["Король Вселенной","👑",1000000000,"OG"],
+["Тунг Тунг Кинг","👑",3500000,"OG"],
+["Бомбардиро Драко","🐲",4200000,"OG"],
+["Тралалеро Космо","🌌",4800000,"OG"],
+["Капучино Король","☕",5500000,"OG"],
+["Сигма Мега","🗿",6000000,"OG"],
+["Радужный Тралала","🌈",6500000,"OG"],
+["Золотой Крокодило","🐊",7000000,"OG"],
+["Космический Пингвино","🐧",7500000,"OG"],
+["Супер Меовл","🐱",8000000,"OG"],
+["Мега Роботино","🤖",8500000,"OG"],
+["Бананозавр","🦖",120000,"Редкий"],
+["Кокосино","🥥",150000,"Редкий"],
+["Арбузини","🍉",180000,"Редкий"],
+["Лимонини","🍋",220000,"Эпический"],
+["Черепахини","🐢",260000,"Эпический"],
+["Пандито","🐼",300000,"Эпический"],
+["Тигрини","🐯",350000,"Эпический"],
+["Слонтини","🐘",400000,"Эпический"],
+["Львонини","🦁",450000,"Легендарный"],
+["Драконини","🐉",500000,"Легендарный"],
+["Фламинго Бомбардиро","🦩",550000,"Легендарный"],
+["Крабини Король","🦀",600000,"Легендарный"],
+["Пингвино Легендо","🐧",700000,"Легендарный"],
+["Галактико","🌌",900000,"Мифический"],
+["Огненный Тралала","🔥",1000000,"Мифический"],
+["Ледяной Крокодило","❄️",1100000,"Мифический"],
+["Радужный Меовл","🌈",1300000,"Секретный"],
+["Золотой Сахур","🥁",1400000,"Секретный"],
+["Алмазный Роботино","💎",1500000,"Секретный"],
+["Королевский Пингвино","👑",1600000,"Секретный"],
+["Космический Сахур","🪐",1800000,"Секретный"],
+["Тёмный Крокодило","🌑",2000000,"Секретный"],
+["Ультра Сигма","🗿",2200000,"Секретный"],
+["Супер Дракони","🐲",2600000,"OG"],
+["Мега Тралалеро","🦈",3000000,"OG"],
+["Босс Брейнротов","👹",3500000,"OG"],
+["Император Меовл","🐱",4500000,"OG"],
+["Абсолютный Роботино","🤖",5000000,"OG"],
+["Звёздный Король","⭐",6000000,"OG"],
+["Брейнрот Бог","⚡",7000000,"OG"],
+["Владыка Галактики","🌌",8000000,"OG"],
+["Сверхновая Сигма","💥",9000000,"OG"],
+["Мега Дракон","🐉",10000000,"OG"],
+["Повелитель Вселенной","🌠",20000000,"OG"],
+["Абсолютный Король","👑",50000000,"OG"],
+["Бог Брейнротов","🔥",100000000,"OG"],
+
+/* 100 дополнительных фанатских персонажей */
+["Бананини Драконини","🍌",110000,"Редкий"],
+["Кокосовый Пингвино","🥥",125000,"Редкий"],
+["Томатный Крокодило","🍅",140000,"Редкий"],
+["Клубничный Сахур","🍓",155000,"Редкий"],
+["Манго Меовл","🥭",170000,"Редкий"],
+["Апельсино Роботино","🍊",185000,"Редкий"],
+["Арбузный Тралала","🍉",200000,"Редкий"],
+["Лимонный Бандито","🍋",215000,"Редкий"],
+["Вишнёвый Капучино","🍒",230000,"Редкий"],
+["Ананасный Тигрини","🍍",245000,"Редкий"],
+["Груша Пандито","🍐",260000,"Эпический"],
+["Персиковый Крабини","🍑",275000,"Эпический"],
+["Черничный Шаркини","🫐",290000,"Эпический"],
+["Виноградный Драко","🍇",305000,"Эпический"],
+["Мандариновый Слонтини","🍊",320000,"Эпический"],
+["Киви Кенгуру","🥝",335000,"Эпический"],
+["Кукурузный Бомбардиро","🌽",350000,"Эпический"],
+["Морковный Роботино","🥕",365000,"Эпический"],
+["Картофельный Босс","🥔",380000,"Эпический"],
+["Перечный Тралала","🫑",395000,"Эпический"],
+["Огуречный Пингвино","🥒",410000,"Эпический"],
+["Грибной Меовл","🍄",425000,"Эпический"],
+["Ореховый Крокодило","🥜",440000,"Эпический"],
+["Медовый Капучино","🍯",455000,"Эпический"],
+["Пончик Бандито","🍩",470000,"Легендарный"],
+["Тортовый Тралала","🎂",485000,"Легендарный"],
+["Печенька Роботино","🍪",500000,"Легендарный"],
+["Шоколадный Драко","🍫",515000,"Легендарный"],
+["Мороженое Меовл","🍦",530000,"Легендарный"],
+["Карамельный Краб","🍬",545000,"Легендарный"],
+["Пицца Дракони","🍕",560000,"Легендарный"],
+["Бургер Бомбардиро","🍔",575000,"Легендарный"],
+["Хотдог Кенгуру","🌭",590000,"Легендарный"],
+["Картошка Фри Меовл","🍟",605000,"Легендарный"],
+["Суши Пингвино","🍣",620000,"Легендарный"],
+["Тако Тралала","🌮",635000,"Легендарный"],
+["Круассан Капучино","🥐",650000,"Легендарный"],
+["Вафельный Робот","🧇",665000,"Легендарный"],
+["Блинный Бандито","🥞",680000,"Легендарный"],
+["Сырный Крокодило","🧀",695000,"Легендарный"],
+["Огненный Пингвино","🔥",710000,"Легендарный"],
+["Ледяной Меовл","🧊",725000,"Легендарный"],
+["Молниеносный Драко","⚡",740000,"Легендарный"],
+["Теневой Крабини","🌑",755000,"Легендарный"],
+["Солнечный Тралала","☀️",770000,"Легендарный"],
+["Лунный Капучино","🌙",785000,"Легендарный"],
+["Звёздный Бандито","⭐",800000,"Легендарный"],
+["Облачный Пингвино","☁️",815000,"Легендарный"],
+["Радужный Робот","🌈",830000,"Мифический"],
+["Алмазный Тралала","💎",845000,"Мифический"],
+["Золотой Меовл","🥇",860000,"Мифический"],
+["Платиновый Крокодило","🏆",875000,"Мифический"],
+["Изумрудный Драко","💚",890000,"Мифический"],
+["Рубиновый Капучино","❤️",905000,"Мифический"],
+["Сапфировый Пингвино","💙",920000,"Мифический"],
+["Аметистовый Бандито","💜",935000,"Мифический"],
+["Кристальный Тралала","🔮",950000,"Мифический"],
+["Магический Роботино","✨",965000,"Мифический"],
+["Кибер Меовл","🤖",980000,"Мифический"],
+["Неоновый Крабини","💡",995000,"Мифический"],
+["Плазменный Драко","☄️",1010000,"Мифический"],
+["Галактический Тигрини","🌌",1025000,"Мифический"],
+["Космический Кенгуру","🪐",1040000,"Мифический"],
+["Метеоритный Босс","☄️",1055000,"Мифический"],
+["Чёрная Дыра Меовл","🕳️",1070000,"Мифический"],
+["Сверхновый Пингвино","💥",1085000,"Мифический"],
+["Космо Капучино","🌠",1100000,"Мифический"],
+["Мега Радужный Драко","🐉",1120000,"Секретный"],
+["Секретный Пингвино","🐧",1140000,"Секретный"],
+["Тёмный Роботино","🤖",1160000,"Секретный"],
+["Золотой Бандито","🦝",1180000,"Секретный"],
+["Алмазный Крабини","🦀",1200000,"Секретный"],
+["Король Тралала","👑",1220000,"Секретный"],
+["Император Крокодило","🐊",1240000,"Секретный"],
+["Повелитель Капучино","☕",1260000,"Секретный"],
+["Владыка Пингвинов","🐧",1280000,"Секретный"],
+["Супер Мега Сигма","🗿",1300000,"Секретный"],
+["Дракон Вселенной","🐉",1320000,"Секретный"],
+["Бог Меовл","🐱",1340000,"Секретный"],
+["Абсолютный Тралала","🦈",1360000,"Секретный"],
+["Вечный Роботино","🤖",1380000,"Секретный"],
+["Король Галактики","🌌",1400000,"Секретный"],
+["Босс Космоса","👹",1420000,"Секретный"],
+["Мега Император","👑",1440000,"Секретный"],
+["Сверхразум Сигма","🗿",1460000,"Секретный"],
+["Огненный Бог","🔥",1480000,"Секретный"],
+["Ледяной Бог","❄️",1500000,"Секретный"],
+["Радужный Император","🌈",1520000,"OG"],
+["Золотой Бог Брейнротов","🥇",1540000,"OG"],
+["Алмазный Король","💎",1560000,"OG"],
+["Космический Император","🪐",1580000,"OG"],
+["Вечный Меовл","🐈",1600000,"OG"],
+["Супер Дракон Вселенной","🐲",1620000,"OG"],
+["Абсолютный Босс","👹",1640000,"OG"],
+["Легенда Брейнротов","🏆",1660000,"OG"],
+["Король Королей","👑",1680000,"OG"],
+["Создатель Вселенной","🌌",1700000,"OG"]
 ].map(x=>({name:x[0],emoji:x[1],value:x[2],rarity:x[3]}));
 
 const caseData=[
-{name:"Стартовый кейс",emoji:"📦",price:100,pool:[0,41,42,43,44,45],weights:[45,25,15,9,5,1]},
-{name:"Фруктовый кейс",emoji:"🍉",price:700,pool:[2,5,7,42,43,44,45,46],weights:[12,12,14,18,16,13,10,5]},
-{name:"Звериный кейс",emoji:"🐾",price:3000,pool:[3,8,9,12,41,48,49,50,51],weights:[8,8,10,8,18,15,13,12,8]},
-{name:"Неоновый кейс",emoji:"💜",price:12000,pool:[4,6,10,11,47,50,51,52,53,54],weights:[8,8,9,9,15,13,12,12,8,6]},
-{name:"Эпический кейс",emoji:"💎",price:50000,pool:[9,10,12,13,14,52,53,54,55,56,57],weights:[10,9,8,8,8,12,12,11,9,7,6]},
-{name:"Мифический кейс",emoji:"🔮",price:180000,pool:[15,16,17,18,19,20,56,57,58,59,60,61],weights:[9,8,8,8,7,7,10,10,9,8,8,8]},
-{name:"OG-кейс",emoji:"👑",price:650000,pool:[21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,61,62,63,64,65,66,67,68,69,70],weights:[8,8,7,7,6,6,5,5,5,5,4,4,4,4,3,3,3,3,2,2,3,3,3,2,2,2,2,1,1,1]}
+{name:"Стартовый",emoji:"📦",price:100,min:0,max:2},
+{name:"Фруктовый",emoji:"🍉",price:700,min:2,max:8},
+{name:"Звериный",emoji:"🐯",price:3000,min:5,max:15},
+{name:"Неоновый",emoji:"🌆",price:12000,min:8,max:22},
+{name:"Эпический",emoji:"💜",price:50000,min:10,max:30},
+{name:"Мифический",emoji:"🔮",price:180000,min:17,max:40},
+{name:"OG",emoji:"👑",price:650000,min:25,max:brainrots.length-1},
+{name:"Алмазный",emoji:"💎",price:1000000,min:30,max:brainrots.length-1},
+{name:"Золотой",emoji:"🟡",price:1500000,min:35,max:brainrots.length-1},
+{name:"Космический",emoji:"🌌",price:2500000,min:40,max:brainrots.length-1},
+{name:"Секретный",emoji:"🕵️",price:4000000,min:45,max:brainrots.length-1},
+{name:"Радужный",emoji:"🌈",price:6000000,min:50,max:brainrots.length-1},
+{name:"Тёмный",emoji:"🌑",price:9000000,min:55,max:brainrots.length-1},
+{name:"Королевский",emoji:"👑",price:15000000,min:60,max:brainrots.length-1},
+{name:"Богатый",emoji:"💰",price:30000000,min:65,max:brainrots.length-1},
+{name:"Вселенский",emoji:"🌠",price:50000000,min:70,max:brainrots.length-1},
+{name:"Божественный",emoji:"⚡",price:100000000,min:75,max:brainrots.length-1},
+{name:"Хэллоуинский",emoji:"🎃",price:120000,min:15,max:brainrots.length-1},
+{name:"Огненный",emoji:"🔥",price:350000,min:20,max:brainrots.length-1},
+{name:"Ледяной",emoji:"❄️",price:500000,min:25,max:brainrots.length-1},
+{name:"Молниеносный",emoji:"⚡",price:900000,min:30,max:brainrots.length-1},
+{name:"Праздничный",emoji:"🎄",price:1800000,min:35,max:brainrots.length-1},
+{name:"Супергеройский",emoji:"🦸",price:3500000,min:40,max:brainrots.length-1},
+{name:"Киберпанк",emoji:"🤖",price:7000000,min:50,max:brainrots.length-1},
+{name:"Драконий",emoji:"🐉",price:12000000,min:60,max:brainrots.length-1},
+{name:"Императорский",emoji:"🏰",price:25000000,min:70,max:brainrots.length-1},
+{name:"Брейнрот-Бог",emoji:"🌟",price:75000000,min:80,max:brainrots.length-1},
+{name:"Сверхновый",emoji:"💥",price:150000000,min:90,max:brainrots.length-1}
 ];
 
+const fmt=n=>Math.floor(n).toLocaleString("ru-RU");
 function save(){
-try{localStorage.setItem(STORAGE_KEY,JSON.stringify(db));}catch(e){}
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(db));
+  if(currentUser)localStorage.setItem(LOGIN_KEY,currentUser);
+  updateUI();
 }
-
-function normalizeUser(u,n){
-u.name=u.name||n;
-u.coins=Math.max(0,Number(u.coins)||0);
-u.inventory=Array.isArray(u.inventory)?u.inventory.filter(b=>b&&b.name&&Number.isFinite(Number(b.value))).map(b=>({...b,value:Number(b.value)})):[];
-u.energy=Math.max(0,Math.min(30,Number(u.energy??30)));
-u.clickLevel=Math.max(1,Number(u.clickLevel)||1);
-u.clickCount=Math.max(0,Number(u.clickCount)||0);
-u.refCases=Math.max(0,Number(u.refCases)||0);
-u.refCount=Math.max(0,Number(u.refCount)||0);
-u.usedCodes=Array.isArray(u.usedCodes)?u.usedCodes:[];
-u.lastDaily=u.lastDaily||"";
-u.lastEnergyTime=Number(u.lastEnergyTime)||Date.now();
-return u;
+function normalizeUser(u){
+  if(typeof u.coins!=="number")u.coins=500;
+  if(!Array.isArray(u.inventory))u.inventory=[];
+  if(typeof u.energy!=="number")u.energy=30;
+  if(typeof u.clickLevel!=="number")u.clickLevel=1;
+  if(typeof u.clickCount!=="number")u.clickCount=0;
+  if(typeof u.refCases!=="number")u.refCases=0;
+  if(typeof u.refCount!=="number")u.refCount=0;
+  if(typeof u.casesOpened!=="number")u.casesOpened=0;
+  if(!Array.isArray(u.usedCodes))u.usedCodes=[];
+  if(typeof u.lastDaily!=="number")u.lastDaily=0;
+  if(typeof u.lastEnergyTime!=="number")u.lastEnergyTime=Date.now();
+  if(typeof u.referredBy==="undefined")u.referredBy=null;
+  return u;
 }
-
-function load(){
-try{db=JSON.parse(localStorage.getItem(STORAGE_KEY)||"null")||db}catch(e){}
-if(!db.accounts)db.accounts={};
-if(!db.codes)db.codes={};
-Object.keys(db.accounts).forEach(n=>normalizeUser(db.accounts[n],n));
-}
-
-function user(){
-return currentUser?db.accounts[currentUser]:null;
-}
-
 function register(){
-const n=$("authName").value.trim().toLowerCase();
-const p=$("authPass").value;
-if(!/^[a-z0-9_]{3,20}$/i.test(n))return msg("authMsg","Имя: от 3 до 20 букв, цифр или _.");
-if(p.length<3)return msg("authMsg","Пароль должен быть не короче 3 символов.");
-if(db.accounts[n])return msg("authMsg","Такой аккаунт уже есть.");
-db.accounts[n]={name:n,password:p,coins:500,inventory:[],energy:30,clickLevel:1,clickCount:0,refCases:0,refCount:0,usedCodes:[],lastDaily:"",lastEnergyTime:Date.now()};
-save();
-enter(n);
+  let name=authName.value.trim(),pass=authPass.value;
+  if(name.length<3||pass.length<3)return toast("Имя и пароль должны быть не короче 3 символов.");
+  if(db.accounts[name])return toast("Такой аккаунт уже существует.");
+  db.accounts[name]=normalizeUser({password:pass,coins:500,inventory:[]});
+  currentUser=name;
+  save();
+  enterGame();
+  startFromReferral();
+  toast("Аккаунт создан!");
 }
-
 function login(){
-const n=$("authName").value.trim().toLowerCase();
-const u=db.accounts[n];
-if(!u||u.password!==$("authPass").value)return msg("authMsg","Неправильное имя или пароль.");
-enter(n);
+  let name=authName.value.trim(),pass=authPass.value,u=db.accounts[name];
+  if(!u||u.password!==pass)return toast("Неверное имя или пароль.");
+  currentUser=name;normalizeUser(u);save();enterGame();
 }
-
-function enter(n){
-currentUser=n;
-normalizeUser(user(),n);
-localStorage.setItem(SESSION_KEY,n);
-$("auth").classList.add("hidden");
-$("game").classList.remove("hidden");
-renderAll();
-page("cases");
-checkReferral();
-save();
+function enterGame(){
+  auth.classList.add("hidden");app.classList.remove("hidden");
+  renderCases();renderInventory();renderUpgradeOptions();renderRoadOptions();
+  renderFuseOptions();renderDiceColors();renderAdminCodes();updateUI();
 }
-
 function logout(){
-if(rocket&&user())user().inventory.push(rocket.stake);
-clearInterval(rocketTimer);
-rocketTimer=null;
-clearTimeout(openingTimer);
-rocket=null;
-road=null;
-pendingDrop=null;
-currentUser=null;
-upgradeBusy=false;
-localStorage.removeItem(SESSION_KEY);
-$("game").classList.add("hidden");
-$("auth").classList.remove("hidden");
-$("authPass").value="";
-msg("authMsg","Ты вышел из аккаунта.");
+  localStorage.removeItem(LOGIN_KEY);currentUser=null;
+  app.classList.add("hidden");auth.classList.remove("hidden");
+  if(rocket.timer)clearTimeout(rocket.timer);
+  rocket.running=false;
 }
-
-const pages=["cases","collection","clicker","dice","upgrade","road","rocket","fuse","codes","referrals","bonus","profile"];
-
-function page(n){
-pages.forEach(p=>$(p+"Page").classList.toggle("hidden",p!==n));
-if(n==="collection")renderInventory();
-if(n==="dice")renderDiceOptions();
-if(n==="upgrade")renderUpgradeOptions();
-if(n==="road")renderRoadOptions();
-if(n==="rocket")renderRocketOptions();
-if(n==="fuse")renderFuseOptions();
-if(n==="codes")renderCodes();
-if(n==="profile")renderProfile();
-if(n==="referrals")renderReferrals();
+function me(){return normalizeUser(db.accounts[currentUser])}
+function toast(msg){
+  let el=document.getElementById("toast");
+  el.textContent=msg;el.style.display="block";
+  clearTimeout(window.toastTimer);
+  window.toastTimer=setTimeout(()=>el.style.display="none",2800);
 }
-
-function weightedDrop(c){
-let total=c.weights.reduce((a,b)=>a+b,0);
-let r=Math.random()*total;
-for(let i=0;i<c.pool.length;i++){
-r-=c.weights[i];
-if(r<0)return brainrots[c.pool[i]];
+function showTab(id,btn){
+  document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
+  if(btn)btn.classList.add("active");
+  updateUI();
 }
-return brainrots[c.pool[c.pool.length-1]];
+function updateUI(){
+  if(!currentUser||!db.accounts[currentUser])return;
+  let u=me();
+  playerName.textContent=currentUser;
+  coins.textContent=fmt(u.coins);
+  brainrotCount.textContent=u.inventory.length;
+  energy.textContent=u.energy+"/30";
+  clickEnergy.textContent=u.energy+"/30";
+  clickPower.textContent=(.1*u.clickLevel).toFixed(2);
+  clickCount.textContent=u.clickCount;
+  clickLevel.textContent=u.clickLevel;
+  energyBar.style.width=(u.energy/30*100)+"%";
+  profileName.textContent=currentUser;
+  profileCoins.textContent=fmt(u.coins);
+  profileCount.textContent=u.inventory.length;
+  profileClicks.textContent=u.clickCount;
+  profileRefs.textContent=u.refCount;
+  profileClickLevel.textContent=u.clickLevel;
+  profileRefCases.textContent=u.refCases;
+  profileCases.textContent=u.casesOpened;
+  let best=u.inventory.map(getBrainrot).filter(Boolean).sort((a,b)=>b.value-a.value)[0];
+  profileBest.textContent=best?best.emoji+" "+best.name:"---";
+  refCount.textContent=u.refCount;
+  refCases.textContent=u.refCases;
+  refCode.textContent=currentUser;
+  adminCodeBox.classList.toggle("hidden",currentUser!=="lnoagent111");
+  dailyStatus.textContent=Date.now()-u.lastDaily<86400000?
+    "Бонус уже получен. Следующий будет доступен через 24 часа.":"Бонус готов к получению!";
 }
-
 function renderCases(){
-$("caseGrid").innerHTML=caseData.map((c,i)=>`<div class="card">${imageTag(c.emoji,c.name)}<h3>${esc(c.name)}</h3><p>🪙 ${c.price.toLocaleString("ru-RU")}</p><p class="small">${c.pool.length} персонажей</p><button onclick="openCase(${i})">Открыть</button></div>`).join("");
+  caseGrid.innerHTML="";
+  caseData.forEach((c,i)=>{
+    let div=document.createElement("div");
+    div.className="card case-card";
+    div.innerHTML=`<div class="case-art">${c.emoji}</div>
+      <h3>${c.name} кейс</h3>
+      <p class="price">🪙 ${fmt(c.price)}</p>
+      <span class="tag">Игровой кейс</span>
+      <button class="primary">Открыть</button>`;
+    div.querySelector("button").onclick=()=>openCase(i);
+    caseGrid.appendChild(div);
+  });
 }
-
-function openCase(i){
-if(pendingDrop)return msg("caseMsg","Закончи предыдущее открытие.");
-const c=caseData[i];
-if(user().coins<c.price)return msg("caseMsg","Не хватает монет!");
-user().coins-=c.price;
-pendingDrop=weightedDrop(c);
-save();
-updateStats();
-$("caseOpening").classList.remove("hidden");
-$("caseOpening").classList.add("spinning");
-$("openingTitle").textContent=c.name;
-$("openingText").textContent="Ищем брейнрота...";
-$("openingImg").src=emojiUrl(c.emoji);
-$("skipBtn").disabled=false;
-clearTimeout(openingTimer);
-openingTimer=setTimeout(finishOpen,1300);
+function randomBrainrot(min,max){
+  let pool=brainrots.slice(min,Math.min(max+1,brainrots.length));
+  return pool[Math.floor(Math.random()*pool.length)];
 }
-
-function skipOpen(){
-if(pendingDrop)finishOpen();
+function refreshLists(){
+  renderInventory();renderUpgradeOptions();renderRoadOptions();renderFuseOptions();updateUI();
 }
-
-function finishOpen(){
-if(!pendingDrop||!user())return;
-clearTimeout(openingTimer);
-const b=pendingDrop;
-pendingDrop=null;
-$("caseOpening").classList.remove("spinning");
-$("openingImg").src=emojiUrl(b.emoji);
-$("openingTitle").textContent=b.name;
-$("openingText").textContent="Редкость: "+b.rarity+" • Стоимость: "+b.value.toLocaleString("ru-RU");
-user().inventory.push({...b,obtained:Date.now()});
-msg("caseMsg","🎉 Выпал "+b.name+"!");
-$("skipBtn").disabled=true;
-save();
-renderAll();
-setTimeout(()=>$("caseOpening").classList.add("hidden"),1600);
+function openCase(index){
+  let c=caseData[index],u=me();
+  if(u.coins<c.price)return toast("Недостаточно монет!");
+  u.coins-=c.price;
+  let b=randomBrainrot(c.min,c.max);
+  u.inventory.push(b.name);u.casesOpened++;
+  save();refreshLists();
+  toast("🎉 Выпал "+b.name+"!");
+  alert("🎉 Тебе выпал "+b.emoji+" "+b.name+"!\nРедкость: "+b.rarity+"\nСтоимость: "+fmt(b.value));
 }
-
-function updateStats(){
-if(!user())return;
-$("coins").textContent=user().coins.toLocaleString("ru-RU");
-$("count").textContent=user().inventory.length;
-$("energy").textContent=user().energy;
-$("statName").textContent=user().name;
-}
-
+function getBrainrot(name){return brainrots.find(b=>b.name===name)}
 function renderInventory(){
-if(!currentUser)return;
-$("collectionCount").textContent=user().inventory.length;
-if(!user().inventory.length){
-$("inventory").innerHTML='<div class="notice">Коллекция пока пустая. Открой кейс!</div>';
-return;
+  if(!currentUser)return;
+  let u=me(),search=(collectionSearch.value||"").toLowerCase();
+  inventory.innerHTML="";
+  let filtered=u.inventory.map((name,index)=>({name,index,b:getBrainrot(name)}))
+    .filter(x=>x.b&&x.name.toLowerCase().includes(search));
+  if(!filtered.length){
+    inventory.innerHTML='<p class="muted">Персонажи не найдены. Открой кейс!</p>';return;
+  }
+  filtered.forEach(x=>{
+    let b=x.b,div=document.createElement("div");
+    div.className="card";
+    div.innerHTML=`<div class="character">${b.emoji}</div>
+      <h3>${b.name}</h3><div class="rarity">${b.rarity}</div>
+      <div class="price">${fmt(b.value)} 🪙</div><small>Экземпляр №${x.index+1}</small>`;
+    inventory.appendChild(div);
+  });
 }
-$("inventory").innerHTML=user().inventory.map((b,i)=>`<div class="card">${imageTag(b.emoji,b.name)}<h3>${esc(b.name)}</h3><p>${esc(b.rarity)}</p><p class="small">${esc(b.mutation||"Обычная")}</p><p>💰 ${b.value.toLocaleString("ru-RU")}</p><button onclick="sellOne(${i})">Продать за ${Math.max(1,Math.floor(b.value*.5)).toLocaleString("ru-RU")}</button></div>`).join("");
-}
-
-function sellOne(i){
-const b=user().inventory[i];
-if(!b)return;
-user().coins+=Math.max(1,Math.floor(b.value*.5));
-user().inventory.splice(i,1);
-save();
-renderAll();
-msg("caseMsg","Продан "+b.name+".");
-}
-
-function sellAll(){
-if(!user().inventory.length)return msg("profileInfo","Коллекция пустая.");
-user().coins+=user().inventory.reduce((s,b)=>s+Math.max(1,Math.floor(b.value*.5)),0);
-user().inventory=[];
-save();
-renderAll();
-renderProfile();
-}
-
-function fillOptions(id){
-if(!currentUser)return;
-$(id).innerHTML=user().inventory.map((b,i)=>`<option value="${i}">${esc(b.name)} (${b.value.toLocaleString("ru-RU")})</option>`).join("")||'<option value="">Нет персонажей</option>';
-}
-
-function renderAll(){
-if(!user())return;
-updateStats();
-renderCases();
-renderInventory();
-$("clickLevel").textContent=user().clickLevel;
-$("clickPower").textContent=(.1+(user().clickLevel-1)*.01).toFixed(2);
-$("clickCount").textContent=user().clickCount;
-renderDiceOptions();
-renderUpgradeOptions();
-renderRoadOptions();
-renderRocketOptions();
-renderFuseOptions();
-}
-
-function restoreEnergy(){
-if(!user())return;
-const u=user();
-const now=Date.now();
-const g=Math.floor((now-u.lastEnergyTime)/60000);
-if(g>0){
-u.energy=Math.min(30,u.energy+g);
-u.lastEnergyTime+=g*60000;
-save();
-}
-}
-
-function clickBrainrot(){
-restoreEnergy();
-if(user().energy<=0)return msg("clickMsg","Энергия закончилась. Подожди восстановления!");
-user().energy--;
-user().clickCount++;
-const power=.1+(user().clickLevel-1)*.01;
-user().coins+=power;
-const newLevel=1+Math.floor(user().clickCount/250);
-if(newLevel>user().clickLevel){
-user().clickLevel=newLevel;
-msg("clickMsg","🎉 Новый уровень! Теперь +"+power.toFixed(2)+" монет за клик.");
-}else{
-msg("clickMsg","+"+power.toFixed(2)+" монет! До следующего уровня: "+(user().clickLevel*250-user().clickCount)+" кликов.");
-}
-save();
-renderAll();
-}
-
-const diceColors=[
-{name:"Красный",id:"red",color:"#ef4444"},
-{name:"Оранжевый",id:"orange",color:"#f97316"},
-{name:"Жёлтый",id:"yellow",color:"#eab308"},
-{name:"Зелёный",id:"green",color:"#22c55e"},
-{name:"Синий",id:"blue",color:"#3b82f6"},
-{name:"Фиолетовый",id:"purple",color:"#a855f7"}
-];
-
-function renderDiceOptions(){
-fillOptions("diceItem");
-$("diceColors").innerHTML=diceColors.map(c=>`<button class="colorChoice ${selectedDiceColor===c.id?"selected":""}" style="background:${c.color}" title="${c.name}" onclick="chooseDiceColor('${c.id}')"></button>`).join("");
-}
-
-function chooseDiceColor(id){
-selectedDiceColor=id;
-renderDiceOptions();
-}
-
-function rollDice(){
-const i=Number($("diceItem").value);
-const b=user().inventory[i];
-if(!b)return msg("diceMsg","Сначала получи брейнрота.");
-const faces=[];
-for(let n=0;n<4;n++){
-if(Math.random()<.008)faces.push("rainbow");
-else faces.push(diceColors[Math.floor(Math.random()*6)].id);
-}
-$("diceFaces").innerHTML=faces.map(x=>`<span class="diceBall" style="background:${x==="rainbow"?"linear-gradient(135deg,red,orange,yellow,green,blue,purple)":diceColors.find(c=>c.id===x).color}"></span>`).join("");
-const count=faces.filter(x=>x===selectedDiceColor).length;
-if(faces.includes("rainbow")){
-for(let n=0;n<4;n++)user().inventory.push({...b,obtained:Date.now(),mutation:"Радужные кубики"});
-msg("diceMsg","🌈 РАДУЖНЫЙ РЕЗУЛЬТАТ! Получено 5 копий "+b.name+"!");
-}else if(count===1){
-user().inventory.push({...b,obtained:Date.now(),mutation:"Выигрыш кубиков"});
-msg("diceMsg","🎉 Цвет выпал один раз! Получена ещё одна копия "+b.name+".");
-}else if(count===4){
-for(let n=0;n<2;n++)user().inventory.push({...b,obtained:Date.now(),mutation:"Выигрыш кубиков"});
-msg("diceMsg","🔥 Цвет выпал четыре раза! Получены ещё две копии "+b.name+".");
-}else{
-user().inventory.splice(i,1);
-msg("diceMsg","💥 Цвет выпал "+count+" раза. Ставка потеряна!");
-}
-save();
-renderAll();
-}
-
 function renderUpgradeOptions(){
-fillOptions("upgradeItem");
-fillOptions("upgradeTarget");
-showUpgradeChance();
+  if(!currentUser)return;
+  let u=me();upgradeItem.innerHTML="";
+  u.inventory.forEach((name,i)=>{
+    let b=getBrainrot(name);if(!b)return;
+    let o=document.createElement("option");
+    o.value=i;o.textContent=b.emoji+" "+b.name+" — "+fmt(b.value);
+    upgradeItem.appendChild(o);
+  });
+  updateUpgradeTargets();
 }
-
-function chanceFor(a,b){
-const ratio=b.value/a.value;
-return Math.max(5,Math.min(85,Math.round(85/(Math.pow(ratio,.8)))));
+function updateUpgradeTargets(){
+  if(!currentUser)return;
+  let u=me(),index=Number(upgradeItem.value),stake=getBrainrot(u.inventory[index]);
+  upgradeTarget.innerHTML="";
+  if(!stake){upgradeInfo.textContent="Сначала получи персонажа в кейсе.";return}
+  brainrots.filter(b=>b.value>stake.value).sort((a,b)=>a.value-b.value).forEach(b=>{
+    let o=document.createElement("option");
+    o.value=b.name;o.textContent=b.emoji+" "+b.name+" — "+fmt(b.value);
+    upgradeTarget.appendChild(o);
+  });
+  updateUpgradeInfo();
 }
-
-function showUpgradeChance(){
-if(!currentUser)return;
-const a=user().inventory[Number($("upgradeItem").value)];
-const b=user().inventory[Number($("upgradeTarget").value)];
-$("upgradeChance").textContent=a&&b?(a===b?"Выбери разные персонажи":chanceFor(a,b)+"%"):"—";
+function updateUpgradeInfo(){
+  if(!currentUser)return;
+  let u=me(),stake=getBrainrot(u.inventory[Number(upgradeItem.value)]);
+  let target=getBrainrot(upgradeTarget.value);
+  if(!stake||!target){upgradeInfo.textContent="Выбери персонажа и цель дороже него.";return}
+  let fee=Math.max(10,Math.floor(stake.value*.08));
+  upgradeInfo.innerHTML=`Твой персонаж: <b>${stake.emoji} ${stake.name}</b><br>
+  Цель: <b>${target.emoji} ${target.name}</b><br>
+  Стоимость улучшения: <b>${fmt(fee)} монет</b><br>
+  <b>Успех: 100% • Неудача: 0%</b>`;
 }
-
-$("upgradeItem").addEventListener("change",showUpgradeChance);
-$("upgradeTarget").addEventListener("change",showUpgradeChance);
-
 function upgrade(){
-if(upgradeBusy)return;
-const i=Number($("upgradeItem").value);
-const j=Number($("upgradeTarget").value);
-const a=user().inventory[i];
-const b=user().inventory[j];
-if(!a||!b||i===j)return msg("upgradeMsg","Выбери двух разных персонажей.");
-if(b.value<=a.value)return msg("upgradeMsg","Цель должна быть дороже ставки.");
-const chance=chanceFor(a,b);
-const wheel=$("upgradeWheel");
-upgradeBusy=true;
-const success=Math.random()*100<chance;
-const greenAngle=chance/100*360;
-const target=success?Math.random()*greenAngle:greenAngle+Math.random()*(360-greenAngle);
-const turns=1440+target;
-wheel.style.transition="none";
-wheel.style.transform="rotate(0deg)";
-requestAnimationFrame(()=>{
-wheel.style.transition="transform 2.5s cubic-bezier(.08,.85,.13,1)";
-wheel.style.transform="rotate("+turns+"deg)";
-});
-msg("upgradeMsg","Колесо вращается...");
-setTimeout(()=>{
-if(!currentUser){
-upgradeBusy=false;
-return;
+  if(upgradeBusy)return;
+  let u=me(),index=Number(upgradeItem.value);
+  let stake=getBrainrot(u.inventory[index]),target=getBrainrot(upgradeTarget.value);
+  if(!stake||!target)return toast("Нужно выбрать персонажа и цель.");
+  if(target.value<=stake.value)return toast("Цель должна быть дороже персонажа.");
+  let fee=Math.max(10,Math.floor(stake.value*.08));
+  if(u.coins<fee)return toast("Нужно "+fmt(fee)+" монет для улучшения.");
+  if(!confirm("Улучшить "+stake.name+" до "+target.name+" за "+fmt(fee)+" монет?"))return;
+  u.coins-=fee;upgradeBusy=true;
+  upgradeWheel.style.transform="rotate(1440deg)";
+  setTimeout(()=>{
+    u.inventory.splice(index,1,target.name);
+    upgradeWheel.style.transition="none";
+    upgradeWheel.style.transform="rotate(0deg)";
+    setTimeout(()=>upgradeWheel.style.transition="transform 3s cubic-bezier(.15,.7,.15,1)",30);
+    upgradeBusy=false;save();refreshLists();
+    toast("🔥 Улучшение выполнено: "+target.name+"!");
+  },3000);
 }
-const idx=user().inventory.indexOf(a);
-if(idx<0){
-upgradeBusy=false;
-return;
-}
-user().inventory.splice(idx,1);
-if(success){
-const targetIndex=user().inventory.indexOf(b);
-if(targetIndex>=0)user().inventory.splice(targetIndex,1);
-user().inventory.push({...b,obtained:Date.now(),mutation:"Апгрейд"});
-msg("upgradeMsg","🟢 УСПЕХ! Получен "+b.name+"!");
-}else{
-msg("upgradeMsg","🔴 Неудача! Ставка "+a.name+" потеряна.");
-}
-upgradeBusy=false;
-save();
-renderAll();
-},2600);
-}
-
-/* Дорога: переменная объявлена только один раз в начале скрипта. */
 function renderRoadOptions(){
-fillOptions("roadItem");
-drawRoad();
+  if(!currentUser)return;
+  let u=me(),old=roadItem.value;
+  roadItem.innerHTML="";
+  u.inventory.forEach((name,i)=>{
+    let b=getBrainrot(name),o=document.createElement("option");
+    o.value=i;o.textContent=(b?b.emoji:"🧠")+" "+name;
+    roadItem.appendChild(o);
+  });
+  if(old!==""&&u.inventory[Number(old)])roadItem.value=old;
 }
-
-function drawRoad(){
-if(!$("roadTrack"))return;
-$("roadTrack").innerHTML="";
-for(let n=0;n<=20;n++){
-const d=document.createElement("span");
-d.className="road-step"+(road&&n<road.steps?" done":"")+(road&&n===road.steps?" current":"");
-d.textContent=n===20?"🏆":n===0?"🏁":n;
-$("roadTrack").appendChild(d);
+const roadMultipliers=[1.25,1.5,1.75,2,2.5,3,3.5,4,5,6,7,8,10,12,15];
+function roadMultiplier(){return road.stage?roadMultipliers[road.stage-1]:1}
+function resetRoad(){
+  road.stage=0;roadMultiplierText.textContent="x1.00";
+  roadStage.textContent="Этап: 0 / 15";roadBar.style.width="0%";
+  roadReward.textContent="Награда появится после прохождения этапа.";
 }
-$("roadMultiplier").textContent="x"+(road?road.multiplier.toFixed(2):"1.00");
-$("roadSteps").textContent="Шагов: "+(road?road.steps:0)+" / 20";
-$("roadStatus").textContent=road?"Ставка: "+road.stake.name:"Выбери брейнрота";
+function roadStep(){
+  if(!me().inventory.length)return toast("Сначала получи персонажа!");
+  if(road.stage>=15)return toast("Все этапы пройдены! Забери награду.");
+  road.stage++;
+  roadMultiplierText.textContent="x"+roadMultiplier().toFixed(2);
+  roadStage.textContent="Этап: "+road.stage+" / 15";
+  roadBar.style.width=(road.stage/15*100)+"%";
+  let b=getBrainrot(me().inventory[Number(roadItem.value)]);
+  let reward=b?Math.floor(b.value*.01*roadMultiplier()):0;
+  roadReward.textContent="Текущая награда: "+fmt(reward)+" монет";
+  toast("🏁 Этап "+road.stage+" пройден!");
 }
-
-function startRoad(){
-if(road)return msg("roadMsg","Сначала закончи текущую попытку.");
-const i=Number($("roadItem").value);
-const b=user().inventory[i];
-if(!b)return msg("roadMsg","Нет персонажа для ставки.");
-road={stake:user().inventory.splice(i,1)[0],steps:0,multiplier:1};
-save();
-renderAll();
-drawRoad();
-msg("roadMsg","Ставка принята! Можно идти.");
+function roadCollect(){
+  if(road.stage===0)return toast("Сначала пройди хотя бы один этап.");
+  let u=me(),b=getBrainrot(u.inventory[Number(roadItem.value)]);
+  if(!b)return toast("Выбери персонажа.");
+  let reward=Math.floor(b.value*.01*roadMultiplier());
+  u.coins+=reward;save();
+  toast("💰 Получено "+fmt(reward)+" монет!");
+  resetRoad();
 }
-
-function advanceRoad(){
-if(!road)return msg("roadMsg","Сначала начни путь.");
-if(road.steps>=20)return msg("roadMsg","Финиш! Забери награду.");
-const risk=.09+road.steps*.012;
-if(Math.random()<risk){
-const name=road.stake.name;
-road=null;
-save();
-renderAll();
-drawRoad();
-return msg("roadMsg","💥 Неудача! "+name+" потерян.");
+function rocketStart(){
+  if(rocket.running)return toast("Ракета уже летит!");
+  if(rocket.level>=10)return toast("Забери награду за предыдущий полёт.");
+  rocket.running=true;
+  rocket.level=0;
+  rocketArt.classList.add("rocket-flight");
+  rocketReward.textContent="Ракета набирает высоту...";
+  rocketTick();
 }
-road.steps++;
-road.multiplier=Math.min(5,1+road.steps*.2);
-drawRoad();
-msg("roadMsg","Успешный шаг! Множитель x"+road.multiplier.toFixed(2)+".");
+function rocketTick(){
+  if(!rocket.running)return;
+  if(rocket.level>=10){
+    rocket.running=false;rocketArt.classList.remove("rocket-flight");
+    rocketReward.textContent="Максимальная высота! Забери награду.";
+    toast("🚀 Максимальный уровень достигнут!");
+    return;
+  }
+  rocket.level++;
+  rocketMultiplier.textContent="x"+(1+rocket.level*.5).toFixed(2);
+  rocketLevel.textContent="Уровень: "+rocket.level+" / 10";
+  rocketBar.style.width=(rocket.level*10)+"%";
+  rocketArt.textContent=["🚀","✨🚀","🔥🚀","🌟🚀","🚀💫"][rocket.level%5];
+  rocket.timer=setTimeout(rocketTick,900);
 }
-
-function collectRoad(){
-if(!road)return msg("roadMsg","Нет активной ставки.");
-const reward=Math.floor(road.stake.value*road.multiplier*.65);
-user().coins+=reward;
-const name=road.stake.name;
-road=null;
-save();
-renderAll();
-drawRoad();
-msg("roadMsg","🏆 Получено "+reward.toLocaleString("ru-RU")+" монет за "+name+".");
+function rocketCollect(){
+  if(rocket.level===0)return toast("Сначала запусти ракету!");
+  let u=me(),reward=rocket.level*100;
+  u.coins+=reward;
+  rocket.running=false;
+  if(rocket.timer)clearTimeout(rocket.timer);
+  rocketArt.classList.remove("rocket-flight");
+  rocket.level=0;rocketMultiplier.textContent="x1.00";
+  rocketLevel.textContent="Уровень: 0 / 10";
+  rocketBar.style.width="0%";rocketArt.textContent="🚀";
+  rocketReward.textContent="Полёт завершён! Получено "+fmt(reward)+" монет.";
+  save();toast("🚀 Получено "+fmt(reward)+" монет!");
 }
-
-/* Ракета: переменная rocket и таймер уже объявлены в начале скрипта. */
-function renderRocketOptions(){
-if(!currentUser)return;
-$("rocketItem").innerHTML=user().inventory.map((b,i)=>`<option value="${i}">${esc(b.name)} (${b.value.toLocaleString("ru-RU")})</option>`).join("")||'<option value="">Нет персонажей</option>';
-$("rocketItem").disabled=!!rocket;
-updateRocketStakeInfo();
+const colors=[
+{name:"Красный",id:"red",emoji:"🔴"},
+{name:"Оранжевый",id:"orange",emoji:"🟠"},
+{name:"Жёлтый",id:"yellow",emoji:"🟡"},
+{name:"Зелёный",id:"green",emoji:"🟢"},
+{name:"Синий",id:"blue",emoji:"🔵"},
+{name:"Фиолетовый",id:"purple",emoji:"🟣"}
+];
+function renderDiceColors(){
+  diceColors.innerHTML="";
+  colors.forEach(c=>{
+    let b=document.createElement("button");
+    b.textContent=c.emoji+" "+c.name;
+    b.className=c.id===selectedDiceColor?"":"secondary";
+    b.onclick=()=>{selectedDiceColor=c.id;renderDiceColors()};
+    diceColors.appendChild(b);
+  });
 }
-
-function updateRocketStakeInfo(){
-if(!currentUser)return;
-const b=user().inventory[Number($("rocketItem").value)];
-$("rocketStakeInfo").textContent=rocket?"В полёте: "+rocket.stake.name:b?"Выбрано: "+b.name+" • "+b.value.toLocaleString("ru-RU"):"Нет персонажей.";
+function rollDice(){
+  let u=me(),result=colors[Math.floor(Math.random()*colors.length)];
+  diceArt.textContent=result.emoji;
+  if(result.id===selectedDiceColor){
+    u.coins+=60;diceResult.textContent="🎉 Угадал! +60 монет";
+    toast("Правильный цвет! +60 монет");
+  }else{
+    u.coins+=5;diceResult.textContent="Выпал "+result.name+". +5 монет за участие!";
+  }
+  save();
 }
-
-function startRocket(){
-if(rocket)return;
-const i=Number($("rocketItem").value);
-const b=user().inventory[i];
-if(!b)return msg("rocketMsg","Выбери брейнрота.");
-rocket={stake:user().inventory.splice(i,1)[0],multiplier:1,ticks:0};
-$("rocketStartBtn").disabled=true;
-$("rocketCashBtn").disabled=false;
-$("rocketVisual").textContent="🚀";
-msg("rocketMsg","Ракета взлетела! Максимум x10.");
-save();
-renderAll();
-rocketTimer=setInterval(()=>{
-if(!rocket)return;
-rocket.ticks++;
-rocket.multiplier=Math.min(10,1+rocket.ticks*.12);
-$("rocketMultiplier").textContent="x"+rocket.multiplier.toFixed(2);
-$("rocketBarFill").style.width=(rocket.multiplier*10)+"%";
-$("rocketStatus").textContent="Ракета летит! Забирай вовремя.";
-if(rocket.multiplier>=10){
-cashRocket();
-}else if(Math.random()<.018+rocket.ticks*.002){
-crashRocket();
-}
-},1000);
-}
-
-function cashRocket(){
-if(!rocket)return;
-clearInterval(rocketTimer);
-rocketTimer=null;
-const reward=Math.floor(rocket.stake.value*rocket.multiplier*.55);
-user().coins+=reward;
-const m=rocket.multiplier;
-rocket=null;
-finishRocket();
-msg("rocketMsg","🏆 Забрано "+reward.toLocaleString("ru-RU")+" монет! Множитель x"+m.toFixed(2)+".");
-save();
-renderAll();
-}
-
-function crashRocket(){
-if(!rocket)return;
-clearInterval(rocketTimer);
-rocketTimer=null;
-const name=rocket.stake.name;
-rocket=null;
-finishRocket();
-$("rocketVisual").textContent="💥";
-msg("rocketMsg","Ракета упала! "+name+" потерян.");
-save();
-renderAll();
-}
-
-function finishRocket(){
-$("rocketStartBtn").disabled=false;
-$("rocketCashBtn").disabled=true;
-$("rocketItem").disabled=false;
-$("rocketMultiplier").textContent="x1.00";
-$("rocketBarFill").style.width="0%";
-$("rocketStatus").textContent="Ракета готова!";
-renderRocketOptions();
-}
-
 function renderFuseOptions(){
-if(!currentUser)return;
-["fuse1","fuse2","fuse3"].forEach(fillOptions);
+  if(!currentUser)return;
+  let u=me(),counts={};fuseItem.innerHTML="";
+  u.inventory.forEach(n=>counts[n]=(counts[n]||0)+1);
+  Object.keys(counts).filter(n=>counts[n]>=2).forEach(n=>{
+    let o=document.createElement("option");
+    o.value=n;o.textContent=n+" × "+counts[n];fuseItem.appendChild(o);
+  });
 }
-
 function fuse(){
-const ids=["fuse1","fuse2","fuse3"].map(id=>Number($(id).value));
-if(ids.some(x=>!Number.isInteger(x))||new Set(ids).size!==3)return msg("fuseMsg","Выбери три разных брейнрота.");
-const items=ids.map(i=>user().inventory[i]);
-if(items.some(x=>!x))return msg("fuseMsg","Не хватает персонажей.");
-const avg=items.reduce((s,b)=>s+b.value,0)/3;
-const roll=Math.random();
-const factor=roll<.2?.7:roll<.85?1:1.3;
-const target=avg*factor;
-let pool=brainrots.filter(b=>b.value>=target*.75&&b.value<=target*1.3);
-if(!pool.length)pool=brainrots;
-const result=pool[Math.floor(Math.random()*pool.length)];
-ids.sort((a,b)=>b-a).forEach(i=>user().inventory.splice(i,1));
-user().inventory.push({...result,obtained:Date.now(),mutation:"Fuse"});
-save();
-renderAll();
-msg("fuseMsg","🧪 Получен "+result.name+"! Результат: "+(factor<1?"неудачный":factor>1?"удачный":"обычный")+" Fuse.");
+  let u=me(),name=fuseItem.value,b=getBrainrot(name);
+  if(!b)return toast("Нет двух одинаковых персонажей.");
+  let first=u.inventory.indexOf(name),second=u.inventory.indexOf(name,first+1);
+  if(first<0||second<0)return toast("Нужно два одинаковых персонажа.");
+  let next=brainrots.filter(x=>x.value>b.value).sort((a,b)=>a.value-b.value)[0];
+  if(!next)return toast("Это уже самый дорогой персонаж!");
+  u.inventory.splice(second,1);u.inventory.splice(first,1);u.inventory.push(next.name);
+  save();refreshLists();toast("🔧 Получен "+next.name+"!");
 }
-
-function isCodeCreator(){
-return currentUser==="lnoagent111";
-}
-
-function renderCodes(){
-$("codeList").innerHTML=Object.entries(db.codes).map(([k,v])=>`<div class="card"><h3>${esc(k)}</h3><p>Награда: ${v.reward}</p><p>Осталось: ${v.uses}</p>${isCodeCreator()?`<button onclick="deleteCode('${esc(k)}')">Удалить</button>`:""}</div>`).join("")||"<p>Промокодов пока нет.</p>";
-}
-
-function createCode(){
-if(!isCodeCreator())return msg("codeCreateMsg","Создавать коды может только lnoagent111.");
-const code=$("newCode").value.trim().toUpperCase().replace(/\s/g,"");
-const reward=Math.floor(Number($("codeReward").value));
-const uses=Math.floor(Number($("codeUses").value));
-if(!/^[A-Z0-9_-]{2,30}$/.test(code)||!Number.isSafeInteger(reward)||reward<1||!Number.isSafeInteger(uses)||uses<1)return msg("codeCreateMsg","Проверь код, награду и активации.");
-if(db.codes[code])return msg("codeCreateMsg","Такой код уже есть.");
-db.codes[code]={reward,uses};
-save();
-renderCodes();
-msg("codeCreateMsg","Код создан!");
-}
-
-function deleteCode(c){
-if(!isCodeCreator())return;
-delete db.codes[c];
-save();
-renderCodes();
-}
-
-function redeem(){
-const c=$("redeemCode").value.trim().toUpperCase().replace(/\s/g,"");
-const v=db.codes[c];
-if(!v)return msg("codeMsg","Такого кода нет.");
-if(user().usedCodes.includes(c))return msg("codeMsg","Ты уже использовал этот код.");
-if(v.uses<=0)return msg("codeMsg","Активации закончились.");
-user().coins+=Number(v.reward);
-v.uses--;
-user().usedCodes.push(c);
-save();
-renderAll();
-renderCodes();
-msg("codeMsg","Получено "+v.reward+" монет!");
-}
-
-function renderReferrals(){
-$("refLink").value=location.href.split("?")[0]+"?ref="+encodeURIComponent(currentUser);
-$("refCount").textContent=user().refCount;
-$("refCases").textContent=user().refCases;
-}
-
-async function copyReferral(){
-try{
-await navigator.clipboard.writeText($("refLink").value);
-msg("refMsg","Ссылка скопирована!");
-}catch(e){
-$("refLink").select();
-msg("refMsg","Скопируй выделенную ссылку вручную.");
-}
-}
-
-function openRefCase(){
-if(user().refCases<=0)return msg("refMsg","Пока нет реферальных кейсов.");
-user().refCases--;
-const b=weightedDrop(caseData[0]);
-user().inventory.push({...b,obtained:Date.now(),mutation:"Реферальный"});
-save();
-renderAll();
-renderReferrals();
-msg("refMsg","Выпал "+b.name+"!");
-}
-
-function checkReferral(){
-const ref=new URLSearchParams(location.search).get("ref");
-if(!ref||!db.accounts[ref]||ref===currentUser)return;
-const key="BrainrotEasy_ref_"+currentUser;
-if(localStorage.getItem(key))return;
-db.accounts[ref].refCount++;
-db.accounts[ref].refCases++;
-localStorage.setItem(key,"1");
-save();
-}
-
 function dailyBonus(){
-const d=new Date();
-const today=d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
-if(user().lastDaily===today)return msg("dailyMsg","Ежедневный бонус уже получен.");
-user().lastDaily=today;
-user().coins+=250;
-save();
-renderAll();
-msg("dailyMsg","🎁 Получено 250 монет! Приходи завтра.");
+  let u=me(),now=Date.now();
+  if(now-u.lastDaily<86400000)return toast("Ежедневный бонус уже получен. Приходи завтра!");
+  u.lastDaily=now;u.coins+=250;save();toast("🎁 Получено 250 монет!");
 }
-
-function renderProfile(){
-if(!currentUser)return;
-const u=user();
-$("profileInfo").textContent="Имя: "+u.name+" • Монеты: "+u.coins.toLocaleString("ru-RU")+" • Персонажей: "+u.inventory.length+" • Уровень кликера: "+u.clickLevel;
+function useCode(){
+  let u=me(),code=codeInput.value.trim().toUpperCase(),data=db.codes[code];
+  if(!data)return toast("Промокод не найден.");
+  if(u.usedCodes.includes(code))return toast("Ты уже использовал этот код.");
+  if(data.uses<=0)return toast("Активации закончились.");
+  u.usedCodes.push(code);u.coins+=data.coins;data.uses--;
+  save();renderAdminCodes();toast("🎉 Промокод активирован! +"+fmt(data.coins)+" монет.");
 }
-
-function petMeowl(){
-const cat=$("meowl");
-const bubble=$("meowlSound");
-cat.classList.remove("catBounce");
-void cat.offsetWidth;
-cat.classList.add("catBounce");
-const sounds=["Мяу! 😻","Мрррр... 💜","Мяу-мяу! 🐾","Пуррр!","Ня! 🐱"];
-bubble.textContent=sounds[Math.floor(Math.random()*sounds.length)];
-try{
-if("speechSynthesis"in window){
-speechSynthesis.cancel();
-const voice=new SpeechSynthesisUtterance("Мяу!");
-voice.lang="ru-RU";
-voice.rate=1.2;
-voice.pitch=1.8;
-speechSynthesis.speak(voice);
+function createCode(){
+  if(currentUser!=="lnoagent111")return toast("Нет доступа.");
+  let code=newCode.value.trim().toUpperCase();
+  let coinsAmount=Number(newCodeCoins.value),uses=Number(newCodeUses.value);
+  if(!code||!Number.isFinite(coinsAmount)||coinsAmount<=0||!Number.isInteger(uses)||uses<=0)
+    return toast("Заполни все поля правильно.");
+  if(db.codes[code])return toast("Такой код уже существует.");
+  db.codes[code]={coins:coinsAmount,uses};
+  save();renderAdminCodes();toast("Промокод "+code+" создан!");
 }
-}catch(e){}
+function renderAdminCodes(){
+  if(!currentUser||currentUser!=="lnoagent111")return;
+  adminCodeList.innerHTML="<h3>Созданные коды</h3>";
+  Object.entries(db.codes).forEach(([code,d])=>{
+    let p=document.createElement("p");
+    p.textContent=code+" — "+fmt(d.coins)+" монет, осталось активаций: "+d.uses;
+    adminCodeList.appendChild(p);
+  });
 }
-
-function makeLeaf(){
-if(!document.body)return;
-const leaf=document.createElement("div");
-leaf.className="leaf";
-leaf.textContent=["🍂","🍁","🍃","🌿"][Math.floor(Math.random()*4)];
-leaf.style.left=Math.random()*100+"vw";
-leaf.style.fontSize=(14+Math.random()*17)+"px";
-leaf.style.animationDuration=(7+Math.random()*8)+"s";
-document.body.appendChild(leaf);
-setTimeout(()=>leaf.remove(),16000);
+function copyReferral(){
+  let link=location.href.split("?")[0]+"?ref="+encodeURIComponent(currentUser);
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(link).then(()=>toast("Ссылка скопирована!"))
+    .catch(()=>prompt("Скопируй ссылку:",link));
+  }else prompt("Скопируй ссылку:",link);
 }
-
-setInterval(makeLeaf,650);
-
-load();
-
-const savedUser=localStorage.getItem(SESSION_KEY);
-if(savedUser&&db.accounts[savedUser]){
-enter(savedUser);
-}else{
-localStorage.removeItem(SESSION_KEY);
+function openReferralCase(){
+  let u=me();
+  if(u.refCases<=0)return toast("Пока нет реферальных кейсов.");
+  u.refCases--;
+  let b=randomBrainrot(0,brainrots.length-1);
+  u.inventory.push(b.name);
+  save();refreshLists();
+  toast("🎁 Выпал "+b.name+"!");
 }
-
-setInterval(()=>{
-if(currentUser){
-restoreEnergy();
-updateStats();
+function clickBrainrot(){
+  let u=me();
+  if(u.energy<=0)return toast("Энергия закончилась. Подожди восстановления.");
+  u.energy--;u.clickCount++;u.coins+=.1*u.clickLevel;
+  if(u.clickCount>0&&u.clickCount%100===0){
+    u.clickLevel++;toast("⬆️ Уровень клика повышен!");
+  }
+  save();
 }
-},15000);
+function buyClickUpgrade(){
+  let u=me(),price=u.clickLevel*250;
+  if(u.coins<price)return toast("Нужно "+fmt(price)+" монет.");
+  u.coins-=price;u.clickLevel++;save();
+  toast("Сила клика увеличена!");
+}
+function recoverEnergy(){
+  if(!currentUser)return;
+  let u=me(),elapsed=Date.now()-u.lastEnergyTime;
+  let amount=Math.floor(elapsed/60000);
+  if(amount>0){
+    u.energy=Math.min(30,u.energy+amount);
+    u.lastEnergyTime+=amount*60000;
+    save();
+  }
+}
+setInterval(recoverEnergy,10000);
+function startFromReferral(){
+  let ref=new URLSearchParams(location.search).get("ref");
+  if(!ref||ref===currentUser||!db.accounts[ref])return;
+  let u=me();
+  if(u.referredBy)return;
+  u.referredBy=ref;
+  let inviter=normalizeUser(db.accounts[ref]);
+  inviter.refCount++;
+  inviter.refCases++;
+  save();
+  toast("🎁 Приглашение засчитано! Друг получил реферальный кейс.");
+}
+renderDiceColors();
 
+let saved=localStorage.getItem(LOGIN_KEY);
+if(saved&&db.accounts[saved]){
+  currentUser=saved;normalizeUser(db.accounts[saved]);
+  enterGame();startFromReferral();
+}
 </script>
 </body>
  </html>
